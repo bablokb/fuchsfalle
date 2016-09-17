@@ -1,0 +1,47 @@
+#!/bin/bash
+# ---------------------------------------------------------------------------
+#
+# /etc/rc.local des Projekts Fuchsfalle.
+#
+# Hier wird das eigentliche Skript fuchsfalle.sh gestartet.
+# Anschliesend warten wir xx Sekunden auf das Ende. Falls
+# fuchsfalle.sh sich nicht rechtzeitig beendet, wird es abgeschossen.
+#
+# Nach Abschluss des Programms fährt das System sofort wieder herunter.
+#
+# Autor: Bernhard Bablok
+# Lizenz: GPL3
+#
+# Website: https://github.com/bablokb/fuchsfalle
+#
+# ---------------------------------------------------------------------------
+
+# --- Definition von Konstanten   -------------------------------------------
+
+WAIT_TOTAL="300"   # Gesamtwartezeit in Sekunden
+WAIT_INT="5"       # Prüfung alle WAIT_INT Sekunden
+
+# --- Hauptprogramm   -------------------------------------------------------
+
+
+# Start von fuchsfalle.sh
+/usr/local/sbin/fuchsfalle.sh &
+ff_pid="$!"
+
+# Wir warten xx Sekunden auf das Ende von fuchsfalle.sh
+
+let countdown=$WAIT_TOTAL
+while $countdown -gt 0; do
+  if [ -d /proc/$ff_pid ]; then
+    let countdown-=$WAIT_INT
+    continue
+  else
+    break
+  fi
+done
+
+# fuchsfalle.sh ist jetzt fertig -> Shutdown auslösen
+# Für Testwzwecke wird /boot/nohalt abgefragt, wenn die
+# Datei existiert, fährt das System nicht herunter!
+
+[ ! -f /boot/nohalt ] && halt -p &
