@@ -2,10 +2,16 @@
 # ---------------------------------------------------------------------------
 #
 # Das Skript fragt die GPIO-Pins 17 und 27 ab. Je nach Zustand versendet
-# das Skript einen anderen Text per SMS und fährt anschließend das
-# System wieder runter.
+# das Skript einen anderen Text per SMS.
 #
-# Das Skript läuft automatisch beim Systemstart aus der /etc/rc.local
+# Das Skript läuft automatisch beim Systemstart aus der /etc/rc.local.
+# Dort wird es überwacht und zur Not abgeschossen. Nach dem Ende
+# des Skripts (so oder so) fährt das System wieder herunter.
+#
+# Autor: Bernhard Bablok
+# Lizenz: GPL3
+#
+# Website: https://github.com/bablokb/fuchsfalle
 #
 # ---------------------------------------------------------------------------
 
@@ -80,13 +86,10 @@ lese_gpios() {
   logger -s -t "$pgm_name" "Status GPIO17: $gpio17"
   logger -s -t "$pgm_name" "Status GPIO27: $gpio27"
 
-  # Ergebnis berechnen
-  local result
-  let result=gpio17+2*gpio27
-  logger -s -t "$pgm_name" "Gesamtstatus: $result"
-
-  # Ergebnis ausgeben
-  echo "$result"
+  # Ergebnis berechnen (globale Variable)
+  declare -i -g gpio_status
+  let gpio_status=gpio17+2*gpio27
+  logger -s -t "$pgm_name" "Gesamtstatus: $gpio_status"
 }
 
 # --- Meldung verschicken   ------------------------------------------------
@@ -135,6 +138,9 @@ schreibe_gpio() {
 
 pgm_name=$(basename "$0")
 init_modem                 2>&1 | tee "/var/log/$pgm_name.log"
-status=$(lese_gpios)       2>&1 | tee "/var/log/$pgm_name.log"
-sende_sms "$status"        2>&1 | tee "/var/log/$pgm_name.log"
+lese_gpios                 2>&1 | tee "/var/log/$pgm_name.log"
+sende_sms "$gpio_status"   2>&1 | tee "/var/log/$pgm_name.log"
+
+# Im Fehlerfall bricht sende_sms ab, hier schreiben wir den Erfolg
+# nach GPIO22 (low)
 schreibe_gpio              2>&1 | tee "/var/log/$pgm_name.log"
