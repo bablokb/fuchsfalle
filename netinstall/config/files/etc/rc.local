@@ -27,18 +27,28 @@ WAIT_INT="5"       # Prüfung alle WAIT_INT Sekunden
 # Start von fuchsfalle.sh
 /usr/local/sbin/fuchsfalle.sh &
 ff_pid="$!"
+logger -s -t "rc.local" "fuchsfalle.sh gestartet (PID: $ff_pid)"
 
 # Wir warten xx Sekunden auf das Ende von fuchsfalle.sh
 
 let countdown=$WAIT_TOTAL
-while $countdown -gt 0; do
+while test $countdown -gt 0; do
+  logger -s -t "rc.local" "Warte $WAIT_INT s auf Ende von fuchsfalle.sh"
+  sleep "$WAIT_INT"
   if [ -d /proc/$ff_pid ]; then
     let countdown-=$WAIT_INT
     continue
   else
+    logger -s -t "rc.local" "fuchsfalle.sh hat sich beendet!"
     break
   fi
 done
+
+# fuchsfalle.sh abbrechen, falls es immer noch läuft
+if [ -d /proc/$ff_pid ]; then
+  logger -s -t "rc.local" "Breche fuchsfalle.sh hart ab!"
+  kill -9 "$ff_pid"
+fi
 
 # fuchsfalle.sh ist jetzt fertig -> Shutdown auslösen
 # Für Testwzwecke wird /boot/nohalt abgefragt, wenn die
