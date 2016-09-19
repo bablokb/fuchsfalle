@@ -19,57 +19,79 @@
 # ---------------------------------------------------------------------------
 
 pgm_name=$(basename "$0")
+logfile="/var/log/${pgm_name%.*}.log"
+
+# --- Meldung ausgeben   ----------------------------------------------------
+
+msg() {
+  logger -s -t  "$pgm_name" "$1" 2>&1 | tee -a "$logfile"
+}
 
 # --- Definition/Einlesen von Konstanten   ----------------------------------
 
-# Einlesen Konfiguration
-if [ -f "/boot/fuchsfalle.cfg" ]; then
-  source "/boot/fuchsfalle.cfg"
-else
-  logger -s -t  "$pgm_name" "Konfiguration /boot/fuchsfalle.cfg fehlt!"
-  exit 3
-fi
+read_config() {
+  # Einlesen Konfiguration
+  if [ -f "/boot/fuchsfalle.cfg" ]; then
+    source "/boot/fuchsfalle.cfg"
+  else
+    msg "Konfiguration /boot/fuchsfalle.cfg fehlt!"
+    exit 3
+  fi
 
-# Modem-Name aus /etc/gammurc extrahieren
-MODEM=$(sed -ne '/device/s/.*= //p' /etc/gammurc)
+  # Modem-Name aus /etc/gammurc extrahieren
+  MODEM=$(sed -ne '/device/s/.*= //p' /etc/gammurc)
+  msg "Modem aus /etc/gammurc: $MODEM"
 
-# Array mit Meldungstexten
-declare -a meldung
-meldung=( \
-  "Falle $FNR: Akkuspannung unter 3,3V." \
-  "Falle $FNR: Falle zu" \
-  "Falle $FNR: Falle zu. Akkuspannung unter 3,3V." \
-  "Falle $FNR: Alles in Ordnung, aber Pi unnötig aufgeweckt."  )
+  # Array mit Meldungstexten
+  declare -g -a meldung
+  meldung=( \
+    "Falle $FNR: Akkuspannung unter 3,3V." \
+    "Falle $FNR: Falle zu" \
+    "Falle $FNR: Falle zu. Akkuspannung unter 3,3V." \
+    "Falle $FNR: Alles in Ordnung, aber Pi unnötig aufgeweckt."  )
+}
+
+# --- Konfiguration ausgeben   ----------------------------------------------
+
+dump_config() {
+  msg "FNR: $FNR"
+  msg "SMS_NR: $SMS_NR"
+  msg "PIN: $PIN"
+  msg "MAX_V: $MAX_V"
+  msg "SLEEP_V: $SLEEP_V"
+}
 
 # --- Initialisierung   -----------------------------------------------------
 
 init_modem() {
   # Absetzen von udevadm, warten auf das USB-Device
   test -c "$MODEM" || udevadm trigger
-  local i
-  let i=1
-  while test i -le $MAX_V; do
-    if test -c "$MODEM"; do
-      logger -s -t  "$pgm_name" "Modem-Device $MODEM verfügbar"
+  declare -i i=1
+  while test "$i" -le "$MAX_V"; do
+    if test -c "$MODEM"; then
+      msg "Modem-Device $MODEM verfügbar"
       break
     else
-      logger -s -t  "$pgm_name" "Warte $SLEEP_V Sekunden auf $MODEM"
+      msg "Warte $SLEEP_V Sekunden auf $MODEM"
       sleep "$SLEEP_V"
     fi
     let i+=1
   done
 
   # Abbruch, falls Modem immer noch nicht verfügbar
-  test -c "$MODEM" || exit 3
+  if [ ! -c "$MODEM" ]; then
+    msg "Modem-Device $MODEM nicht verfügbar - Abbruch!"
+    exit 3
+  fi
 
   # Setzen der PIN
-  gammu entersecuritycode PIN - <<< $PIN
+  gammu entersecuritycode PIN "$PIN"
   local rc="$?"
   if [ "$rc" -eq 0 ]; then
-    logger -s -t "$pgm_name" "PIN erfolgreich gesetzt"
+    msg "PIN erfolgreich gesetzt"
     return
   else
-    logger -s -t "$pgm_name" "Konnte PIN nicht setzen (Code: $rc)"
+    msg "Konnte PIN nicht setzen (Code: $rc) - Abbruch!"
     exit 3
   fi  
 }
@@ -93,13 +115,13 @@ lese_gpios() {
   gpio27=$(cat /sys/class/gpio/gpio27/value)
 
   # Log schreiben
-  logger -s -t "$pgm_name" "Status GPIO17: $gpio17"
-  logger -s -t "$pgm_name" "Status GPIO27: $gpio27"
+  msg "Status GPIO17: $gpio17"
+  msg "Status GPIO27: $gpio27"
 
   # Ergebnis berechnen (globale Variable)
   declare -i -g gpio_status
   let gpio_status=gpio17+2*gpio27
-  logger -s -t "$pgm_name" "Gesamtstatus: $gpio_status"
+  msg "Gesamtstatus: $gpio_status"
 }
 
 # --- Meldung verschicken   ------------------------------------------------
@@ -110,32 +132,32 @@ sende_sms() {
  
   # Wir nutzen den Meldungsnummer als Index in den Array
   text="${meldung[$nr]}"
-  logger -s -t "$pgm_name" "Versende Meldung: $text"
+  msg "Versende Meldung: $text"
 
   # Prüfen auf /boot/nosend (Testmodus)
   if [ -f "/boot/nosend" ]; then
-    logger -s -t "$pgm_name" "Testmodus: SMS wird NICHT gesendet!"
+    msg "Testmodus: SMS wird NICHT gesendet!"
     return
   fi
 
   # Maximal MAX_V Versuche für den Versand der SMS
-  local i rc
-  let i=1
-  while test i -le $MAX_V; do
+  local rc
+  declare -i i=1
+  while test "$i" -le "$MAX_V"; do
     gammu sendsms TEXT "$SMS_NR" -text "$text"
     rc="$?"
     if [ "$rc" -eq 0 ]; then
-      logger -s -t "$pgm_name" "Versuch $i: SMS-Versand erfolgreich"
+      msg "Versuch $i: SMS-Versand erfolgreich"
       return
     else
-      logger -s -t "$pgm_name" "Versuch $i: Fehler (Code: $rc)"
+      msg "Versuch $i: Fehler (Code: $rc)"
       sleep "$SLEEP_V"
     fi
     let i+=1
   done
 
   # hier kommen wir nur im Fehlerfall hin -> Abbruch
-  logger -s -t "$pgm_name" "SMS-Versand fehlgeschlagen"
+  msg "SMS-Versand fehlgeschlagen"
   exit 3
 }
 
@@ -147,15 +169,19 @@ schreibe_gpio() {
   echo "out" > /sys/class/gpio/gpio22/direction
 
   # auf Low setzen
+  msg "Setze GPIO22 auf low"
   echo "0" > /sys/class/gpio/gpio22/value
 }
 
 # --- Hauptprogramm   ------------------------------------------------------
 
-init_modem                 2>&1 | tee "/var/log/$pgm_name.log"
-lese_gpios                 2>&1 | tee "/var/log/$pgm_name.log"
-sende_sms "$gpio_status"   2>&1 | tee "/var/log/$pgm_name.log"
+msg "#############  Programmstart  ###########"
+read_config
+dump_config
+init_modem
+lese_gpios
+sende_sms "$gpio_status"
 
 # Im Fehlerfall bricht sende_sms ab, hier schreiben wir den Erfolg
 # nach GPIO22 (low)
-schreibe_gpio              2>&1 | tee "/var/log/$pgm_name.log"
+schreibe_gpio
