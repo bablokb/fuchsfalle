@@ -35,7 +35,10 @@ Konfiguration
 Zwei Dateien müssen angepasst werden. Einmal die Datei `/etc/gammurc`.
 Hier muss das richtige Modem-Device eingetragen sein.
 
-Die zweite Konfigurationsdatei ist `fuchsfalle.cfg` auf der ersten
-Partition des fertig installierten Systems. Hier müssen insbesondere
+Die zweite Konfigurationsdatei ist `/boot/fuchsfalle.cfg` (auf der ersten
+Partition des fertig installierten Systems). Hier müssen insbesondere
 die Nummer der Falle, die SMS-Nummer und die PIN der SIM-Karte 
 engetragen werden.
+
+Erst mit dem Löschen der beiden Dateien `/boot/nohalt` und `/bootnosend`
+(ebenfalls auf der ersten Partition) wird das System "scharf" geschalten.
