@@ -18,16 +18,17 @@
 #
 # ---------------------------------------------------------------------------
 
-# --- Definition von Konstanten   -------------------------------------------
+# --- Definition/Einlesen von Konstanten   ----------------------------------
 
-MODEM="/dev/ttyUSB2"
-FNR="4"                # Nummer der Falle
-SMS_NR="123456789"     # SMS-Nummer
-PIN="1234"             # PIN-Nummer
-MAX_V="10"             # Anzahl Versuche in Schleifen
-SLEEP_V="3"            # Sekunden zwischen den Versuchen
+pgm_name=$(basename "$0")
+if [ -f "/boot/fuchsfalle.cfg" ]; then
+  source "/boot/fuchsfalle.cfg"
+else
+  logger -s -t  "$pgm_name" "Konfiguration /boot/fuchsfalle.cfg fehlt!"
+  exit 3
+fi
+
 declare -a meldung     # Array mit Meldungstexten
-
 meldung=( \
   "Falle $FNR: Akkuspannung unter 3,3V." \
   "Falle $FNR: Falle zu" \
@@ -145,7 +146,6 @@ schreibe_gpio() {
 
 # --- Hauptprogramm   ------------------------------------------------------
 
-pgm_name=$(basename "$0")
 init_modem                 2>&1 | tee "/var/log/$pgm_name.log"
 lese_gpios                 2>&1 | tee "/var/log/$pgm_name.log"
 sende_sms "$gpio_status"   2>&1 | tee "/var/log/$pgm_name.log"
