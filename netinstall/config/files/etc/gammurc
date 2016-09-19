@@ -1,0 +1,6 @@
+[gammu]
+device = /dev/ttyUSB2
+name = Huawei UMTS USB-Stick
+connection = at
+logfile = /var/log/gammu.log
+logformat = nothing
