@@ -8,6 +8,9 @@
 # Dort wird es überwacht und zur Not abgeschossen. Nach dem Ende
 # des Skripts (so oder so) fährt das System wieder herunter.
 #
+# Es gibt einen Testmodus: falls die Datei /boot/nosend existiert, dann
+# wird keine SMS versendet.
+#
 # Autor: Bernhard Bablok
 # Lizenz: GPL3
 #
@@ -101,6 +104,12 @@ sende_sms() {
   # Wir nutzen den Meldungsnummer als Index in den Array
   text="${meldung[$nr]}"
   logger -s -t "$pgm_name" "Versende Meldung: $text"
+
+  # Prüfen auf /boot/nosend (Testmodus)
+  if [ -f "/boot/nosend" ]; then
+    logger -s -t "$pgm_name" "Testmodus: SMS wird NICHT gesendet!"
+    return
+  fi
 
   # Maximal MAX_V Versuche für den Versand der SMS
   local i rc
