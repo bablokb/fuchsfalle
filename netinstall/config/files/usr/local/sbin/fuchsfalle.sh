@@ -18,9 +18,11 @@
 #
 # ---------------------------------------------------------------------------
 
+pgm_name=$(basename "$0")
+
 # --- Definition/Einlesen von Konstanten   ----------------------------------
 
-pgm_name=$(basename "$0")
+# Einlesen Konfiguration
 if [ -f "/boot/fuchsfalle.cfg" ]; then
   source "/boot/fuchsfalle.cfg"
 else
@@ -28,7 +30,11 @@ else
   exit 3
 fi
 
-declare -a meldung     # Array mit Meldungstexten
+# Modem-Name aus /etc/gammurc extrahieren
+MODEM=$(sed -ne '/device/s/.*= //p' /etc/gammurc)
+
+# Array mit Meldungstexten
+declare -a meldung
 meldung=( \
   "Falle $FNR: Akkuspannung unter 3,3V." \
   "Falle $FNR: Falle zu" \
