@@ -24,7 +24,7 @@ logfile="/var/log/${pgm_name%.*}.log"
 # --- Meldung ausgeben   ----------------------------------------------------
 
 msg() {
-  logger -s -t  "$pgm_name" "$1" 2>&1 | tee -a "$logfile"
+  [ -n "$DEBUG" ] && logger -s -t  "$pgm_name" "$1" 2>&1 | tee -a "$logfile"
 }
 
 # --- Definition/Einlesen von Konstanten   ----------------------------------
