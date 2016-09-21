@@ -189,8 +189,26 @@ schreibe_gpio22() {
 # --- Hauptprogramm   ------------------------------------------------------
 
 msg "#############  Programmstart  ###########"
+
+# --- Konfiguration lesen
 read_config
 dump_config
+
+# --- Simulation von Fehlern für das Testen der Komponenten
+if [ "$ETEST" = "NOSMS" ]; then
+  # SMS-Versand schlägt fehl
+  msg "Fehlersimulation: SMS-Versand fehlgeschlagen"
+  exit 3
+elif [ "$ETEST" = "LOOP" ]; then
+  # fuchsfalle.sh hängt sich auf (rc.local sollte den Prozess dann beenden)
+  msg "Fehlersimulation: $pgm_name hängt sich auf"
+  while true; do
+    sleep 10
+    msg "Fehlersimulation: ..."
+  done
+fi
+
+# --- eigentliche Verarbeitung
 schreibe_gpio22 1
 init_modem
 lese_gpios
