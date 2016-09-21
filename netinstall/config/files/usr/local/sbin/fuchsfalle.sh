@@ -132,11 +132,18 @@ lese_gpios() {
 
 sende_sms() {
   # erstes Argument ist die Nummer der Meldung
-  local nr="$1" text
+  local nr="$1" text sms_nr
  
+  # Die meldung[3] geht an den Admin (Heartbeat-Meldung)
+  if [ "$nr" -eq 3 -a -n "$SMS_ADMIN"]; then
+    sms_nr="$SMS_ADMIN"
+  else
+    sms_nr="$SMS_NR"
+  fi
+
   # Wir nutzen den Meldungsnummer als Index in den Array
   text="${meldung[$nr]}"
-  msg "Versende Meldung: $text"
+  msg "Versende Meldung an $sms_nr: $text"
 
   # Prüfen auf /boot/nosend (Testmodus)
   if [ -f "/boot/nosend" ]; then
@@ -148,7 +155,7 @@ sende_sms() {
   local rc
   declare -i i=1
   while test "$i" -le "$MAX_V"; do
-    gammu sendsms TEXT "$SMS_NR" -text "$text"
+    gammu sendsms TEXT "$sms_nr" -text "$text"
     rc="$?"
     if [ "$rc" -eq 0 ]; then
       msg "Versuch $i: SMS-Versand erfolgreich"
