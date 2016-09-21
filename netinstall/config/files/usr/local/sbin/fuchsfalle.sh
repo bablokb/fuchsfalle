@@ -165,16 +165,18 @@ sende_sms() {
   exit 3
 }
 
-# --- GPIO 22 auf Low setzen   ---------------------------------------------
+# --- GPIO 22 setzen (erstes Argument ist 0 oder 1)   ----------------------
 
-schreibe_gpio() {
+schreibe_gpio22() {
   # Pin 22 verfügbar machen für das schreiben
-  echo "22"  > /sys/class/gpio/export
-  echo "out" > /sys/class/gpio/gpio22/direction
+  if [ ! -d /sys/class/gpio/gpio22/ ]; then
+    echo "22"  > /sys/class/gpio/export
+    echo "out" > /sys/class/gpio/gpio22/direction
+  fi
 
-  # auf Low setzen
-  msg "Setze GPIO22 auf low"
-  echo "0" > /sys/class/gpio/gpio22/value
+  # gemäß erstem Argument setzen
+  msg "Setze GPIO22 auf $1"
+  echo "$1" > /sys/class/gpio/gpio22/value
 }
 
 # --- Hauptprogramm   ------------------------------------------------------
@@ -182,10 +184,11 @@ schreibe_gpio() {
 msg "#############  Programmstart  ###########"
 read_config
 dump_config
+schreibe_gpio22 1
 init_modem
 lese_gpios
 sende_sms "$gpio_status"
 
 # Im Fehlerfall bricht sende_sms ab, hier schreiben wir den Erfolg
 # nach GPIO22 (low)
-schreibe_gpio
+schreibe_gpio22 0
