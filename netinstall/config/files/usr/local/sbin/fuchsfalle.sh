@@ -84,7 +84,11 @@ init_modem() {
     exit 3
   fi
 
-  # Setzen der PIN
+  # Setzen der PIN falls nicht leer
+  if [ -z "$PIN" ]; then
+    msg "PIN ist leer"
+    return
+  fi
   gammu entersecuritycode PIN "$PIN"
   local rc="$?"
   if [ "$rc" -eq 0 ]; then
