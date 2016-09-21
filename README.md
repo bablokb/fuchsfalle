@@ -47,8 +47,10 @@ Variablen angepasst werden:
 Die Variable `AKTIV` steuert, ob die Verarbeitung überhaupt anläuft. Die
 Variable steht am Anfang auf `0`, damit das System sauber konfiguriert
 werden kann. Wichtig: erst mit dem Löschen der beiden Dateien
+
   - `/bootnosend`
   - `/boot/nohalt`
+
 (ebenfalls auf der ersten Partition) wird das System "scharf" geschalten.
 Sind die Dateien vorhanden, läuft zwar die Verarbeitung an, aber es
 wird entweder keine SMS versendet (`/boot/nosend` existiert) und/oder
