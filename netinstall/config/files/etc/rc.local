@@ -54,4 +54,10 @@ fi
 # Für Testwzwecke wird /boot/nohalt abgefragt, wenn die
 # Datei existiert, fährt das System nicht herunter!
 
+# Ende der Verarbeitung über GPIO10 signalisieren
+echo "10"  > /sys/class/gpio/export
+echo "out" > /sys/class/gpio/gpio10/direction
+echo "1"   > /sys/class/gpio/gpio10/value
+sleep 1
+
 [ ! -f /boot/nohalt ] && halt -p &
