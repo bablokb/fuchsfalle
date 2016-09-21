@@ -23,6 +23,14 @@ WAIT_INT="5"       # Prüfung alle WAIT_INT Sekunden
 
 # --- Hauptprogramm   -------------------------------------------------------
 
+# Einbinden Konfiguration
+source /boot/fuchsfalle.cfg
+
+# Prüfen, ob Ablauf aktiviert ist
+if [ "$AKTIV" != "1" ]; then
+  logger -s -t "rc.local" "Fuchsfalle nicht aktiv (siehe /boot/fuchsfalle.cfg)"
+  exit 0
+fi
 
 # Start von fuchsfalle.sh
 /usr/local/sbin/fuchsfalle.sh &
