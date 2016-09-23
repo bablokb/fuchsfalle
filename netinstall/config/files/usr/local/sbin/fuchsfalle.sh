@@ -35,6 +35,7 @@ read_config() {
     source "/boot/fuchsfalle.cfg"
   else
     msg "Konfiguration /boot/fuchsfalle.cfg fehlt!"
+    schreibe_gpio22 0
     exit 3
   fi
 
@@ -81,6 +82,7 @@ init_modem() {
   # Abbruch, falls Modem immer noch nicht verfügbar
   if [ ! -c "$MODEM" ]; then
     msg "Modem-Device $MODEM nicht verfügbar - Abbruch!"
+    schreibe_gpio22 0
     exit 3
   fi
 
@@ -96,6 +98,7 @@ init_modem() {
     return
   else
     msg "Konnte PIN nicht setzen (Code: $rc) - Abbruch!"
+    schreibe_gpio22 0
     exit 3
   fi  
 }
@@ -169,6 +172,7 @@ sende_sms() {
 
   # hier kommen wir nur im Fehlerfall hin -> Abbruch
   msg "SMS-Versand fehlgeschlagen"
+  schreibe_gpio22 0
   exit 3
 }
 
@@ -189,6 +193,7 @@ schreibe_gpio22() {
 # --- Hauptprogramm   ------------------------------------------------------
 
 msg "#############  Programmstart  ###########"
+schreibe_gpio22 1
 
 # --- Konfiguration lesen
 read_config
@@ -198,6 +203,7 @@ dump_config
 if [ "$ETEST" = "NOSMS" ]; then
   # SMS-Versand schlägt fehl
   msg "Fehlersimulation: SMS-Versand fehlgeschlagen"
+  schreibe_gpio22 0
   exit 3
 elif [ "$ETEST" = "LOOP" ]; then
   # fuchsfalle.sh hängt sich auf (rc.local sollte den Prozess dann beenden)
@@ -209,11 +215,6 @@ elif [ "$ETEST" = "LOOP" ]; then
 fi
 
 # --- eigentliche Verarbeitung
-schreibe_gpio22 1
 init_modem
 lese_gpios
 sende_sms "$gpio_status"
-
-# Im Fehlerfall bricht sende_sms ab, hier schreiben wir den Erfolg
-# nach GPIO22 (low)
-schreibe_gpio22 0
