@@ -86,21 +86,37 @@ init_modem() {
     exit 3
   fi
 
-  # Setzen der PIN falls nicht leer
+  # Falls PIN leer, wird sie auch nicht gesetzt
   if [ -z "$PIN" ]; then
     msg "PIN ist leer"
     return
   fi
-  gammu entersecuritycode PIN "$PIN"
-  local rc="$?"
-  if [ "$rc" -eq 0 ]; then
-    msg "PIN erfolgreich gesetzt"
-    return
-  else
-    msg "Konnte PIN nicht setzen (Code: $rc) - Abbruch!"
-    schreibe_gpio22 0
-    exit 3
-  fi  
+
+  # Mehrere Versuche, die PIN zu setzen. Der spezielle Return-Code
+  # 114 (Timeout) wird dabei abgefangen, die anderen nicht (die
+  # SIM soll durch eine falsche PIN nicht auf die Schnelle gesperrt werden)
+
+  let i=1
+  while test "$i" -le "$MAX_V"; do
+    gammu entersecuritycode PIN "$PIN"
+    local rc="$?"
+    if [ "$rc" -eq 0 ]; then
+      msg "PIN erfolgreich gesetzt"
+      return
+    elif [ "$rc" -eq 114 ]; then
+      msg "Konnte PIN nicht setzen (Code: $rc=Timeout)!"
+      msg "Warte $SLEEP_V Sekunden vor einem neuen Versuch"
+      sleep "$SLEEP_V"
+    else
+      msg "Konnte PIN nicht setzen (Code: $rc) - Abbruch!"
+      break
+    fi
+    let i+=1
+  done
+
+  # hier kommen wir nur im Fehlerfall hin (Abbruch oder zu viele Versuche)
+  schreibe_gpio22 0
+  exit 3
 }
 
 # --- Auslesen der GPIOs   --------------------------------------------------
@@ -138,7 +154,7 @@ sende_sms() {
   local nr="$1" text sms_nr
  
   # Die meldung[3] geht an den Admin (Heartbeat-Meldung)
-  if [ "$nr" -eq 3 -a -n "$SMS_ADMIN"]; then
+  if [ "$nr" -eq 3 -a -n "$SMS_ADMIN" ]; then
     sms_nr="$SMS_ADMIN"
   else
     sms_nr="$SMS_NR"
