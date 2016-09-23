@@ -34,7 +34,7 @@ schreibe_gpio() {
   fi
 
   # gemäß zweiten Argument setzen
-  msg "Setze GPIO$nr auf $wert"
+  logger -s -t "rc.local" "Setze GPIO$nr auf $wert"
   echo "$wert" > /sys/class/gpio/gpio$nr/value
 }
 
