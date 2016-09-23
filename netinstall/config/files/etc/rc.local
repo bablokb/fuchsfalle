@@ -21,6 +21,23 @@
 WAIT_TOTAL="300"   # Gesamtwartezeit in Sekunden
 WAIT_INT="5"       # Prüfung alle WAIT_INT Sekunden
 
+# --- GPIO setzen    --------------------------------------------------------
+# 1. Arg: Nr
+# 2. Arg: 0 oder 1
+
+schreibe_gpio() {
+  local nr="$1" wert="$2"
+  # Pin verfügbar machen für das schreiben
+  if [ ! -d /sys/class/gpio/gpio$nr/ ]; then
+    echo "$nr"  > /sys/class/gpio/export
+    echo "out" > /sys/class/gpio/gpio$nr/direction
+  fi
+
+  # gemäß zweiten Argument setzen
+  msg "Setze GPIO$nr auf $wert"
+  echo "$wert" > /sys/class/gpio/gpio$nr/value
+}
+
 # --- Hauptprogramm   -------------------------------------------------------
 
 # Einbinden Konfiguration
@@ -29,6 +46,7 @@ source /boot/fuchsfalle.cfg
 # Prüfen, ob Ablauf aktiviert ist
 if [ "$AKTIV" != "1" ]; then
   logger -s -t "rc.local" "Fuchsfalle nicht aktiv (siehe /boot/fuchsfalle.cfg)"
+  schreibe_gpio 22 0
   exit 0
 fi
 
@@ -56,16 +74,14 @@ done
 if [ -d /proc/$ff_pid ]; then
   logger -s -t "rc.local" "Breche fuchsfalle.sh hart ab!"
   kill -9 "$ff_pid"
+  schreibe_gpio 22 0
 fi
+
+# Ende der Verarbeitung über GPIO10 signalisieren
+schreibe_gpio 10 1
+sleep 1
 
 # fuchsfalle.sh ist jetzt fertig -> Shutdown auslösen
 # Für Testwzwecke wird /boot/nohalt abgefragt, wenn die
 # Datei existiert, fährt das System nicht herunter!
-
-# Ende der Verarbeitung über GPIO10 signalisieren
-echo "10"  > /sys/class/gpio/export
-echo "out" > /sys/class/gpio/gpio10/direction
-echo "1"   > /sys/class/gpio/gpio10/value
-sleep 1
-
 [ ! -f /boot/nohalt ] && halt -p &
