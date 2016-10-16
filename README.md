@@ -23,8 +23,33 @@ Konfigurationsdateien für den Raspberry Pi.
 TODO: Beschreibung weiterer Dateien.
 
 
-Installation
-------------
+Installation auf Jessie-Lite
+----------------------------
+
+Jessie-Lite wie gewohnt installieren. Ein normales Jessie geht auch,
+aber der große Softwareumfang ist nicht notwendig. Folgende Pakete
+müssen nachinstalliert werden:
+
+  - gammurc
+  - usb-modeswitch
+  - usb-modeswitch-data
+  - git
+
+Letzteres Paket ist nicht für den Betrieb, sondern für die einfache
+Installation notwendig. Anschließend folgende Befehle auf dem Pi
+ausführen:
+
+    sudo su -
+    git clone https://github.com/bablokb/fuchsfalle.git
+    cd fuchsfalle/netinstall/config/files
+    cp -va --parents * /
+
+Damit sind alle Dateien an ihrem Platz. Anschließend die Konfiguration
+wie unten beschrieben durchführen.
+
+
+Installation per Netinstall
+---------------------------
 
 TODO: Beschreibung Ablauf Installation per Netinstall.
 
@@ -37,7 +62,7 @@ Hier muss das richtige Modem-Device eingetragen sein.
 
 Die zweite Konfigurationsdatei ist `/boot/fuchsfalle.cfg` (auf der ersten
 Partition des fertig installierten Systems). Hier müssen eine Reihe von
-Variablen angepasst werden:
+Variablen per Editor angepasst werden:
 
   - AKTIV="0 oder 1"
   - PIN="Pin-Nummer der SIM-Karte"
@@ -46,16 +71,25 @@ Variablen angepasst werden:
 
 Die Variable `AKTIV` steuert, ob die Verarbeitung überhaupt anläuft. Die
 Variable steht am Anfang auf `0`, damit das System sauber konfiguriert
-werden kann. Wichtig: erst mit dem Löschen der beiden Dateien
+werden kann. 
+
+Um besser testen zu können, gibt es die beiden Dateien
 
   - `/bootnosend`
   - `/boot/nohalt`
 
-(ebenfalls auf der ersten Partition) wird das System "scharf" geschalten.
-Sind die Dateien vorhanden, läuft zwar die Verarbeitung an, aber es
-wird entweder keine SMS versendet (`/boot/nosend` existiert) und/oder
-das System fährt nach dem Ende der Verarbeitung nicht runter 
-(`/boot/nohalt` existiert).
+Die Existenz der ersten Datei steuert den SMS-Versand. Solange es die
+Datei gibt (Inhalt egal), wird der Versand nicht ausgeführt, sondern
+nur simuliert.
+
+Die Existenz der zweiten Datei steuert das Verhalten am Ende der
+Verarbeitung. Solange die Datei existiert, fährt das System nicht runter,
+man kann sich also auch nach der Verarbeitung anmelden und die
+Logmeldungen ansehen. Auch wenn das System nicht runter fährt werden
+alle GPIOs entsprechend den Vorgaben gesetzt!
+
+Wichtig: erst mit dem Löschen der beiden Dateien wird das System "scharf" 
+geschalten.
 
 Ist die Nummer des Admins leer, werden die Heartbeat-Meldungen auch an
 die Nummer des Fallenbetreuers gesendet.
