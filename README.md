@@ -30,7 +30,7 @@ Jessie-Lite wie gewohnt installieren. Ein normales Jessie geht auch,
 aber der große Softwareumfang ist nicht notwendig. Folgende Pakete
 müssen nachinstalliert werden:
 
-  - gammurc
+  - gammu
   - usb-modeswitch
   - usb-modeswitch-data
   - git
@@ -72,6 +72,10 @@ Variablen per Editor angepasst werden:
 Die Variable `AKTIV` steuert, ob die Verarbeitung überhaupt anläuft. Die
 Variable steht am Anfang auf `0`, damit das System sauber konfiguriert
 werden kann. 
+
+Bei `AKTIV=0` fährt das System hoch, setzt GPIO22 auf low und bleibt
+hochgefahren, d.h. es wird erst gar nicht versucht, eine SMS zu
+senden.
 
 Um besser testen zu können, gibt es die beiden Dateien
 
