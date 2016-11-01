@@ -158,7 +158,7 @@ gestartet wird.
   sogar auf einem Windows-PC gehen). Beim nächsten Start bleibt der Pi
   wieder oben und man kann sich die Logs ansehen.
 
-  5. - x-ter Fall
+  5. Fall und Folgende
 
   Das sind alles Variationen, z.B. durch ändern der
   Einstellung der Testplatine. Fehlersituationen kööen über die
