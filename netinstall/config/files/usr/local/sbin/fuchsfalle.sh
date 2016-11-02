@@ -46,9 +46,9 @@ read_config() {
   # Array mit Meldungstexten
   declare -g -a meldung
   meldung=( \
-    "Falle $FNR: Akkuspannung unter 3,3V." \
-    "Falle $FNR: Falle zu" \
     "Falle $FNR: Falle zu. Akkuspannung unter 3,3V." \
+    "Falle $FNR: Falle zu" \
+    "Falle $FNR: Akkuspannung unter 3,3V." \
     "Falle $FNR: Alles in Ordnung (Heartbeat-Meldung)."  )
 }
 
