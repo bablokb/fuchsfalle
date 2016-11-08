@@ -40,6 +40,9 @@ schreibe_gpio() {
 
 # --- Hauptprogramm   -------------------------------------------------------
 
+# Startmeldung
+logger -s -t "rc.local" "Programmstart rc.local"
+
 # Einbinden Konfiguration
 source /boot/fuchsfalle.cfg
 
@@ -84,4 +87,6 @@ sleep 1
 # fuchsfalle.sh ist jetzt fertig -> Shutdown auslösen
 # Für Testwzwecke wird /boot/nohalt abgefragt, wenn die
 # Datei existiert, fährt das System nicht herunter!
+
+logger -s -t "rc.local" "Programmende rc.local"
 [ ! -f /boot/nohalt ] && halt -p &
