@@ -56,7 +56,7 @@ optimieren (etwa auf 100-110s), der Wert sollte aber immer größer sein
 als die maximale Laufzeit des Fuchsfalle-Skripts.
 
 Das Fuchsfalle-Skript, wenn es nicht beim Versenden einer SMS hängt,
-läuft für
+wartet für
 
   - Modemsuche: 30 Sekunden (10 mal 3 Sekunden)
   - Pin setzen: 30 Sekunden (10 mal 3 Sekunden)
@@ -65,6 +65,8 @@ läuft für
 Die Anzahl der Versuche (`MAX_V=10`) und die Wartezeit zwischen
 den Versuchen (`SLEEP_V=3`) ist über die `/boot/fuchsfalle.cfg`
 konfigurierbar. Bei der aktuellen Konfiguration läuft das Skript
-also im schlechtesten Fall 90 Sekunden (Modem wird erst beim letzten
+also im schlechtesten Fall 90+x Sekunden (Modem wird erst beim letzten
 Versuch erkannt, Pin kann erst beim letzten Versuch gesetzt werden,
-SMS-Versand scheitert zehn Mal).
+SMS-Versand scheitert zehn Mal). Die "+x" sind schwer abschätzbar,
+da die einzelnen Versuche (Pin setzen, SMS versenden) auch einige Zeit
+in Anspruch nehmen.
