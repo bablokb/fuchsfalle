@@ -18,8 +18,8 @@
 
 # --- Definition von Konstanten   -------------------------------------------
 
-WAIT_TOTAL="300"   # Gesamtwartezeit in Sekunden
-WAIT_INT="5"       # Prüfung alle WAIT_INT Sekunden
+WAIT_TOTAL="180"   # Gesamtwartezeit in Sekunden
+WAIT_INT="3"       # Prüfung alle WAIT_INT Sekunden
 
 # --- GPIO setzen    --------------------------------------------------------
 # 1. Arg: Nr
