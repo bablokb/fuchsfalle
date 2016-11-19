@@ -1,6 +1,0 @@
-root:root 755 /boot/nohalt
-root:root 755 /boot/nosend
-root:root 755 /boot/fuchsfalle.cfg
-root:root 755 /etc/rc.local
-root:root 644 /etc/gammurc
-root:root 755 /usr/local/sbin/fuchsfalle.sh
