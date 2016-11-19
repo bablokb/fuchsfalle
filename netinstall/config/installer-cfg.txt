@@ -1,3 +1,15 @@
+# ---------------------------------------------------------------------------
+# Steuerdatei für RaspberryPi-Netinstaller
+#
+# https://github.com/FooDeas/raspberrypi-ua-netinst
+#
+# Autor: Bernhard Bablok
+# Lizenz: GPL3
+#
+# Website: https://github.com/bablokb/fuchsfalle
+#
+# ---------------------------------------------------------------------------
+
 preset=server
 packages=gammu,usb-modeswitch,usb-modeswitch-data
 hostname=fuchsfalle
@@ -5,3 +17,8 @@ rootpw=fuchs
 timezone=Europe/Berlin
 locales=de_DE.UTF-8
 system_default_locale=de_DE.UTF-8
+
+#ip_addr=192.168.100.10
+#ip_netmask=255.255.255.0
+#ip_broadcast=192.168.100.255
+#ip_gateway=192.168.100.1
