@@ -1,1 +1,11 @@
-install_files datei.liste
+# ---------------------------------------------------------------------------
+# Nacharbeiten nach der Installation per RaspberryPi-Netinstaller.
+#
+# https://github.com/FooDeas/raspberrypi-ua-netinst
+#
+# Autor: Bernhard Bablok
+# Lizenz: GPL3
+#
+# Website: https://github.com/bablokb/fuchsfalle
+#
+# ---------------------------------------------------------------------------
