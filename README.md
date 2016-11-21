@@ -41,7 +41,7 @@ ausführen:
 
     sudo su -
     git clone https://github.com/bablokb/fuchsfalle.git
-    cd fuchsfalle/netinstall/config/files
+    cd fuchsfalle/netinstall/config/files/root
     cp -va --parents * /
 
 Damit sind alle Dateien an ihrem Platz. Anschließend die Konfiguration
