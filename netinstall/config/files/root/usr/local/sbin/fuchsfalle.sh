@@ -24,7 +24,11 @@ logfile="/var/log/${pgm_name%.*}.log"
 # --- Meldung ausgeben   ----------------------------------------------------
 
 msg() {
-  [ -n "$DEBUG" ] && logger -s -t  "$pgm_name" "$1" 2>&1 | tee -a "$logfile"
+  if [ -n "$DEBUG" ]; then
+    local tstamp="[$(date '+%Y%m%d %H:%M:%S')] "
+    (echo -en "$tstamp"; logger -s -t  "$pgm_name" "$1" 2>&1) | tee -a "$logfile"
+    sync
+  fi
 }
 
 # --- Definition/Einlesen von Konstanten   ----------------------------------
@@ -34,7 +38,7 @@ read_config() {
   if [ -f "/boot/fuchsfalle.cfg" ]; then
     source "/boot/fuchsfalle.cfg"
   else
-    msg "Konfiguration /boot/fuchsfalle.cfg fehlt!"
+    DEBUG=1 msg "Konfiguration /boot/fuchsfalle.cfg fehlt!"
     schreibe_gpio22 0
     exit 3
   fi
@@ -189,6 +193,7 @@ sende_sms() {
   # hier kommen wir nur im Fehlerfall hin -> Abbruch
   msg "SMS-Versand fehlgeschlagen"
   schreibe_gpio22 0
+  DEBUG=1 msg "Programmende $pgm_name (mit Fehler)"
   exit 3
 }
 
@@ -208,7 +213,7 @@ schreibe_gpio22() {
 
 # --- Hauptprogramm   ------------------------------------------------------
 
-msg "#############  Programmstart  ###########"
+DEBUG=1 msg "Programmstart $pgm_name"
 schreibe_gpio22 1
 
 # --- Konfiguration lesen
@@ -234,3 +239,4 @@ fi
 init_modem
 lese_gpios
 sende_sms "$gpio_status"
+DEBUG=1 msg "Programmende $pgm_name (Erfolg)"
