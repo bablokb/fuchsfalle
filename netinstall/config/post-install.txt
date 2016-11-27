@@ -9,3 +9,7 @@
 # Website: https://github.com/bablokb/fuchsfalle
 #
 # ---------------------------------------------------------------------------
+
+# Anpassen /boot/config.txt   -----------------------------------------------
+
+echo -e "\nmax_usb_current=1" /boot/config.txt
