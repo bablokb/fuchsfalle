@@ -34,6 +34,15 @@ msg() {
 # --- Definition/Einlesen von Konstanten   ----------------------------------
 
 read_config() {
+  # Return-Codes von gammu
+  local grinc="$(dirname "$0")/gammu_retcode.inc"
+  if [ -f "$grinc" ]; then
+    source "$grinc"
+  else
+    DEBUG=1 msg "Datei $grinc fehlt!"
+    schreibe_gpio22 0
+    exit 3
+  fi
   # Einlesen Konfiguration
   if [ -f "/boot/fuchsfalle.cfg" ]; then
     source "/boot/fuchsfalle.cfg"
@@ -104,16 +113,17 @@ init_modem() {
   while test "$i" -le "$MAX_V"; do
     gammu entersecuritycode PIN "$PIN"
     local rc="$?"
-    if [ "$rc" -eq 0 ]; then
+    if [ "$rc" -eq 0 -o "$rc" -eq 101 ]; then
       msg "PIN erfolgreich gesetzt"
       return
-    elif [ "$rc" -eq 114 ]; then
-      msg "Konnte PIN nicht setzen (Code: $rc=Timeout)!"
+    elif [ "$rc" -eq 123 ]; then
+      # Security-Fehler: sofortiger Abbruch, um SIM nicht zu sperren
+      msg "Konnte PIN nicht setzen (Code: $rc: ${gammuret[$rc]}) - Abbruch!"
+      break
+    else
+      msg "Konnte PIN nicht setzen (Code: $rc: ${gammuret[$rc]})!"
       msg "Warte $SLEEP_V Sekunden vor einem neuen Versuch"
       sleep "$SLEEP_V"
-    else
-      msg "Konnte PIN nicht setzen (Code: $rc) - Abbruch!"
-      break
     fi
     let i+=1
   done
@@ -214,7 +224,7 @@ schreibe_gpio22() {
 # --- Hauptprogramm   ------------------------------------------------------
 
 DEBUG=1 msg "Programmstart $pgm_name"
-schreibe_gpio22 1
+DEBUG=1 schreibe_gpio22 1
 
 # --- Konfiguration lesen
 read_config
