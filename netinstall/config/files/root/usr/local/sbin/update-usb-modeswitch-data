@@ -1,13 +1,40 @@
 #!/bin/bash
+# ---------------------------------------------------------------------------
+# Nachinstallation der aktuellen usb-modeswitch Version vom backports-Repo.
+# Das Skript wird einmalig aus /etc/rc.local aufgerufen.
+#
+# Autor: Bernhard Bablok
+# Lizenz: GPL3
+#
+# Website: https://github.com/bablokb/fuchsfalle
+#
+# ---------------------------------------------------------------------------
 
-# setup backports
+# Auf Netzwerk warten
+
+let i=1
+while ! ping -c 1 www.google.de; do
+  let i+=1
+  if [ $i -gt 10 ]; then
+    logger -t "update-usb-modeswitch-data" "Kein Netzwerk (Abbruch)"
+    exit 3
+  fi
+  sleep 1
+done
+
+# backports einrichten
 echo 'deb http://ftp.debian.org/debian jessie-backports main contrib non-free' > \
      /etc/apt/sources.list.d/debian-jessie-backports.list
-     
-# update usb-modeswitch-data
-apt-get update
-APT_LISTCHANGES_FRONTEND=none apt-get -y -t jessie-backports --force-yes install usb-modeswitch-data
+logger -t "update-usb-modeswitch-data" "Update Paketliste (mit backports)"
+apt-get update | logger -t "update-usb-modeswitch-data"
 
-# remove backports
+# update usb-modeswitch-data
+APT_LISTCHANGES_FRONTEND=none apt-get -y -t jessie-backports --force-yes install usb-modeswitch-data | logger -t "update-usb-modeswitch-data"
+
+# backports entfernen
+logger -t "update-usb-modeswitch-data" "Update Paketliste (ohne backports)"
 rm -f /etc/apt/sources.list.d/debian-jessie-backports.list
-apt-get update
+apt-get update | logger -t "update-usb-modeswitch-data"
+
+# Execution-Bit entfernen
+chmod -x "$0"
