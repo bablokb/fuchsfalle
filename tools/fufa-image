@@ -19,8 +19,8 @@ IMG="fuchsfalle.img"
 # --- Download des Images   -------------------------------------------------
 
 rm -f "$IMG"
-[ ! -f "${IMG}.bz2" ] && wget -O "${IMG}.bz2" "$NETINST_SRC"
-bunzip2 -c "${IMG}.bz2" > "$IMG"
+[ ! -f "netinstall.img.bz2" ] && wget -O "netinstall.img.bz2" "$NETINST_SRC"
+bunzip2 -c "netinstall.img.bz2" > "$IMG"
 
 # --- Image per Loop-Device mounten   ---------------------------------------
 
@@ -31,7 +31,8 @@ mount /dev/mapper/loop0p1 /mnt
 
 # --- Projektdateien kopieren   ---------------------------------------------
 
-cp -a "$(dirname $0)/../netinstall/" /mnt/raspberrypi-ua-netinst
+cp -va --no-preserve=ownership \
+                   "$(dirname $0)/../netinstall/" /mnt/raspberrypi-ua-netinst
 
 # --- Aufräumarbeiten   -----------------------------------------------------
 
