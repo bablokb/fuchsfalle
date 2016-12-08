@@ -11,7 +11,7 @@
 # ---------------------------------------------------------------------------
 
 preset=server
-packages=gammu,usb-modeswitch,usb-modeswitch-data
+packages="gammu,usb-modeswitch,usb-modeswitch-data"
 hostname=fuchsfalle
 rootpw=fuchs
 timezone=Europe/Berlin
