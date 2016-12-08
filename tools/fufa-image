@@ -14,7 +14,7 @@
 
 NETINST_VERSION="v1.4.1"
 NETINST_SRC="https://github.com/FooDeas/raspberrypi-ua-netinst/releases/download/${NETINST_VERSION}/raspberrypi-ua-netinst-${NETINST_VERSION}.img.bz2"
-IMG="netinst.img"
+IMG="fuchsfalle.img"
 
 # --- Download des Images   -------------------------------------------------
 
