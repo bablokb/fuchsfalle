@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# setup backports
+echo 'deb http://ftp.debian.org/debian jessie-backports main contrib non-free' > \
+     /etc/apt/sources.list.d/debian-jessie-backports.list
+     
+# update usb-modeswitch-data
+apt-get update
+APT_LISTCHANGES_FRONTEND=none apt-get -y -t jessie-backports --force-yes install usb-modeswitch-data
+
+# remove backports
+rm -f /etc/apt/sources.list.d/debian-jessie-backports.list
+apt-get update
