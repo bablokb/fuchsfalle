@@ -1,0 +1,43 @@
+#!/bin/bash
+# ---------------------------------------------------------------------------
+#
+# Hilfsprogramm für die Erstellung eines Images für den Raspbian-Netinstaller.
+#
+# Muss als root laufen.
+#
+# Autor: Bernhard Bablok
+# Lizenz: GPL3
+#
+# Website: https://github.com/bablokb/fuchsfalle
+#
+# ---------------------------------------------------------------------------
+
+NETINST_VERSION="v1.4.1"
+NETINST_SRC="https://github.com/FooDeas/raspberrypi-ua-netinst/releases/download/${NETINST_VERSION}/raspberrypi-ua-netinst-${NETINST_VERSION}.img.bz2"
+IMG="netinst.img"
+
+# --- Download des Images   -------------------------------------------------
+
+rm -f "$IMG"
+[ ! -f "${IMG}.bz2" ] && wget -O "${IMG}.bz2" "$NETINST_SRC"
+bunzip2 -c "${IMG}.bz2" > "$IMG"
+
+# --- Image per Loop-Device mounten   ---------------------------------------
+
+modprobe loop
+kpartx -va "${IMG}"
+partprobe
+mount /dev/mapper/loop0p1 /mnt
+
+# --- Projektdateien kopieren   ---------------------------------------------
+
+cp -a "$(dirname $0)/../netinstall/" /mnt/raspberrypi-ua-netinst
+
+# --- Aufräumarbeiten   -----------------------------------------------------
+
+umount /mnt
+kpartx -vd "${IMG}"
+
+# --- und Ende ...   --------------------------------------------------------
+
+echo "Netinstaller-Image $IMG erstellt. Wie üblich auf SD-Karte kopieren"
