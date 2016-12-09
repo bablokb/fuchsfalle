@@ -51,6 +51,14 @@ wie unten beschrieben durchführen.
 Installation per Netinstall
 ---------------------------
 
+Als Vorraussetzung sind die beiden Pakete `bzip2` und `kpartx`
+notwendig, die einmalig wie üblich mit
+
+    apt-get update
+    apt-get -y install bzip2 kpartx
+
+installiert werden müssen.
+
 Die Installation per Netinstall läuft in mehreren Schritten ab. Zuerst
 wird das Repository geclont:
 
