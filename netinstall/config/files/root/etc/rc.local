@@ -16,12 +16,6 @@
 #
 # ---------------------------------------------------------------------------
 
-# --- Einmalige Ausführung nach dem allerersten Bootvorgang   ---------------
-
-if [ -x /usr/local/sbin/update-usb-modeswitch-data ]; then
-  /usr/local/sbin/update-usb-modeswitch-data &
-fi
-
 # --- Definition von Konstanten   -------------------------------------------
 
 DEBUG=1            # Leer, um Meldungen zu unterdrücken
