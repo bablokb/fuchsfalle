@@ -12,7 +12,7 @@
 #
 # ---------------------------------------------------------------------------
 
-NETINST_VERSION="v1.4.1"
+NETINST_VERSION="v1.5.0"
 NETINST_SRC="https://github.com/FooDeas/raspberrypi-ua-netinst/releases/download/${NETINST_VERSION}/raspberrypi-ua-netinst-${NETINST_VERSION}.img.bz2"
 IMG="fuchsfalle.img"
 
@@ -43,18 +43,7 @@ mount /dev/mapper/loop0p1 /mnt
 # --- Projektdateien kopieren   ---------------------------------------------
 
 cp -a --no-preserve=ownership \
-                   "$(dirname $0)/../netinstall/" /mnt/raspberrypi-ua-netinst
-
-# Workaround für 1.4.1 (enthält noch alten Installer)
-
-cp -a --no-preserve=ownership "$(dirname $0)/../netinstall/config/"*.txt /mnt/
-
-cp -a --no-preserve=ownership \
-     "$(dirname $0)/../netinstall/config/files/"*.list /mnt/config/
-
-mkdir -p /mnt/config/files
-cp -a --no-preserve=ownership \
-     "$(dirname $0)/../netinstall/config/files/root/"* /mnt/config/files
+             "$(dirname $0)/../netinstall/config" /mnt/raspberrypi-ua-netinst
 
 # --- Aufräumarbeiten   -----------------------------------------------------
 
