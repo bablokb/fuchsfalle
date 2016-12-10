@@ -35,6 +35,3 @@ APT_LISTCHANGES_FRONTEND=none apt-get -y -t jessie-backports --force-yes install
 logger -t "update-usb-modeswitch-data" "Update Paketliste (ohne backports)"
 rm -f /etc/apt/sources.list.d/debian-jessie-backports.list
 apt-get update | logger -t "update-usb-modeswitch-data"
-
-# Execution-Bit entfernen
-chmod -x "$0"
