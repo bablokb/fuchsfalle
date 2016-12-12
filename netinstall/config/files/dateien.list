@@ -5,6 +5,6 @@ root:root 755 /etc/rc.local
 root:root 644 /etc/gammurc
 root:root 755 /usr/local/sbin/fuchsfalle.sh
 root:root 644 /usr/local/sbin/gammu_retcode.inc
-root:root 755 /usr/local/sbin/fuchsaktiv.sh
+root:root 755 /usr/local/sbin/fuchsctl
 root:root 755 /usr/local/sbin/update-usb-modeswitch-data
 root:systemd-journal 775 /var/log/journal
