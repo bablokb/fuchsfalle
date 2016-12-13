@@ -152,8 +152,28 @@ lese_gpios() {
   gpio27=$(cat /sys/class/gpio/gpio27/value)
 
   # Log schreiben
-  msg "Status GPIO17: $gpio17"
-  msg "Status GPIO27: $gpio27"
+  msg "Status GPIO17: $gpio17 (erste Messung, wird ignoriert)"
+  msg "Status GPIO27: $gpio27 (erste Messung, wird ignoriert)"
+
+  sleep 1
+
+  # Pins auslesen (2. Messung)
+  gpio17=$(cat /sys/class/gpio/gpio17/value)
+  gpio27=$(cat /sys/class/gpio/gpio27/value)
+
+  # Log schreiben
+  msg "Status GPIO17: $gpio17 (zweite Messung, wird ignoriert)"
+  msg "Status GPIO27: $gpio27 (zweite Messung, wird ignoriert)"
+
+  sleep 1
+
+  # Pins auslesen (3. Messung)
+  gpio17=$(cat /sys/class/gpio/gpio17/value)
+  gpio27=$(cat /sys/class/gpio/gpio27/value)
+
+  # Log schreiben
+  msg "Status GPIO17: $gpio17 (dritte Messung, wird verwendet)"
+  msg "Status GPIO27: $gpio27 (dritte Messung, wird verwendet)"
 
   # Ergebnis berechnen (globale Variable)
   declare -i -g gpio_status
@@ -190,11 +210,11 @@ sende_sms() {
   while test "$i" -le "$MAX_V"; do
     gammu sendsms TEXT "$sms_nr" -text "$text"
     rc="$?"
-    if [ "$rc" -eq 0 ]; then
+    if [ "$rc" -eq 0  -o "$rc" -eq 101 ]; then
       msg "Versuch $i: SMS-Versand erfolgreich"
       return
     else
-      msg "Versuch $i: Fehler (Code: $rc)"
+      msg "Versuch $i: Fehler (Code: $rc: ${gammuret[$rc]})"
       sleep "$SLEEP_V"
     fi
     let i+=1
@@ -203,7 +223,7 @@ sende_sms() {
   # hier kommen wir nur im Fehlerfall hin -> Abbruch
   msg "SMS-Versand fehlgeschlagen"
   schreibe_gpio22 0
-  DEBUG=1 msg "Programmende $pgm_name (mit Fehler)"
+  DEBUG=1 msg "__________ Programmende $pgm_name (mit Fehler) _____________"
   exit 3
 }
 
@@ -223,7 +243,7 @@ schreibe_gpio22() {
 
 # --- Hauptprogramm   ------------------------------------------------------
 
-DEBUG=1 msg "Programmstart $pgm_name"
+DEBUG=1 msg "__________ Programmstart $pgm_name ___________________________"
 DEBUG=1 schreibe_gpio22 1
 
 # --- Konfiguration lesen
@@ -246,7 +266,7 @@ elif [ "$ETEST" = "LOOP" ]; then
 fi
 
 # --- eigentliche Verarbeitung
-init_modem
 lese_gpios
+init_modem
 sende_sms "$gpio_status"
-DEBUG=1 msg "Programmende $pgm_name (Erfolg)"
+DEBUG=1 msg "__________ Programmende $pgm_name (Erfolg) ___________________"
