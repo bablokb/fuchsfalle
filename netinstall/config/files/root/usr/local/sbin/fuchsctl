@@ -15,15 +15,22 @@ cat <<EOF
 Mögliche Parameter:
 
 help    - diese Hilfe
+
 aktiv   - Konfiguration AKTIV=1 setzen
 inaktiv - Konfiguration AKTIV=0 setzen
 pin     - Setzen der Pin
 sms     - Setzen der SMS-Nummer (SMS_NR)
 admin   - Setzen der Admin-Nummern (SMS_ADMIN)
+
+syslog  - Anzeige Systemlog-Meldungen
+log     - Anzeige /var/log/fuchsfalle.log
+rclog   - Anzeige /var/log/rc.log
+
 send    - Senden von SMS aktivieren
 nosend  - Senden von SMS deaktivieren
 halt    - Herunterfahren aktivieren
 nohalt  - Herunterfahren deaktivieren
+
 sharf   - Scharfschalten des Pi (entspricht "aktiv send halt")
 EOF
 
@@ -45,10 +52,9 @@ do_inaktiv() {
 # --- -----------------------------------------------------------------------
 
 do_pin() {
+  sed -i -e "/PIN/s/PIN=\".*\"/PIN=\"$1\"/" /boot/fuchsfalle.cfg
   if [ -z "$1" ]; then
-    echo "error: Pinnummer fehlt"
-  else
-    sed -i -e "/PIN/s/PIN=\".*\"/PIN=\"$1\"/" /boot/fuchsfalle.cfg
+    echo "Warnung: Pinnummer gelöscht"
   fi
 }
 
@@ -65,25 +71,28 @@ do_sms() {
 # --- -----------------------------------------------------------------------
 
 do_admin() {
+  sed -i -e "/SMS_ADMIN/s/SMS_ADMIN=\".*\"/SMS_ADMIN=\"$1\"/" /boot/fuchsfalle.cfg
   if [ -z "$1" ]; then
-    echo "error: SMS_ADMIN-Nummer fehlt"
-  else
-    sed -i -e "/SMS_ADMIN/s/SMS_ADMIN=\".*\"/SMS_ADMIN=\"$1\"/" /boot/fuchsfalle.cfg
+    echo "Warnung: SMS_ADMIN-Nummer gelöscht"
   fi
 }
 
 # --- -----------------------------------------------------------------------
 
-do_log() {
-  if [ -z "$1" ]; then
-    echo "error: Log-Type (syslog|rc.local|fuchsfalle) fehlt"
-  elif [ "$1" = "syslog" ]; then
-    journalctl SYSLOG_IDENTIFIER=rc.local SYSLOG_IDENTIFIER=fuchsfalle.sh
-  elif [ "$1" = "rc.local" ]; then
+do_syslog() {
+  journalctl SYSLOG_IDENTIFIER=rc.local SYSLOG_IDENTIFIER=fuchsfalle.sh
+}
+
+# --- -----------------------------------------------------------------------
+
+do_rclog() {
     cat /var/log/rc.log
-  elif [ "$1" = "fuchsfalle" ]; then
-    cat /var/log/fuchsfalle.log
-  fi
+}
+
+# --- -----------------------------------------------------------------------
+
+do_log() {
+  cat /var/log/fuchsfalle.log
 }
 
 # --- -----------------------------------------------------------------------
