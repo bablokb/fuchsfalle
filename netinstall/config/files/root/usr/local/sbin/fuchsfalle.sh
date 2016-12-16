@@ -96,6 +96,7 @@ init_modem() {
   if [ ! -c "$MODEM" ]; then
     msg "Modem-Device $MODEM nicht verfügbar - Abbruch!"
     schreibe_gpio22 0
+    DEBUG=1 msg "__________ Programmende $pgm_name (mit Fehler) _____________"
     exit 3
   fi
 
@@ -130,6 +131,7 @@ init_modem() {
 
   # hier kommen wir nur im Fehlerfall hin (Abbruch oder zu viele Versuche)
   schreibe_gpio22 0
+  DEBUG=1 msg "__________ Programmende $pgm_name (mit Fehler) _____________"
   exit 3
 }
 
@@ -142,38 +144,18 @@ lese_gpios() {
   local gpio17 gpio27
  
   # Pins verfügbar machen für das Lesen
-  echo "17" > /sys/class/gpio/export
-  echo "in" > /sys/class/gpio/gpio17/direction
-  echo "27" > /sys/class/gpio/export
-  echo "in" > /sys/class/gpio/gpio27/direction
+  gpio -g mode 17 in
+  gpio -g mode 17 up
+  gpio -g mode 27 in
+  gpio -g mode 27 up
 
   # Pins auslesen
-  gpio17=$(cat /sys/class/gpio/gpio17/value)
-  gpio27=$(cat /sys/class/gpio/gpio27/value)
+  gpio17=$(gpio -g read 17)
+  gpio27=$(gpio -g read 27)
 
   # Log schreiben
-  msg "Status GPIO17: $gpio17 (erste Messung, wird ignoriert)"
-  msg "Status GPIO27: $gpio27 (erste Messung, wird ignoriert)"
-
-  sleep 1
-
-  # Pins auslesen (2. Messung)
-  gpio17=$(cat /sys/class/gpio/gpio17/value)
-  gpio27=$(cat /sys/class/gpio/gpio27/value)
-
-  # Log schreiben
-  msg "Status GPIO17: $gpio17 (zweite Messung, wird ignoriert)"
-  msg "Status GPIO27: $gpio27 (zweite Messung, wird ignoriert)"
-
-  sleep 1
-
-  # Pins auslesen (3. Messung)
-  gpio17=$(cat /sys/class/gpio/gpio17/value)
-  gpio27=$(cat /sys/class/gpio/gpio27/value)
-
-  # Log schreiben
-  msg "Status GPIO17: $gpio17 (dritte Messung, wird verwendet)"
-  msg "Status GPIO27: $gpio27 (dritte Messung, wird verwendet)"
+  msg "Status GPIO17: $gpio17"
+  msg "Status GPIO27: $gpio27"
 
   # Ergebnis berechnen (globale Variable)
   declare -i -g gpio_status
