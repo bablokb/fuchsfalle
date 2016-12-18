@@ -21,6 +21,7 @@ inaktiv - Konfiguration AKTIV=0 setzen
 pin     - Setzen der Pin
 sms     - Setzen der SMS-Nummer (SMS_NR)
 admin   - Setzen der Admin-Nummern (SMS_ADMIN)
+fnr     - Setzen der Nummer/des Texts der Fuchsfalle
 
 syslog  - Anzeige Systemlog-Meldungen
 log     - Anzeige /var/log/fuchsfalle.log
@@ -75,6 +76,16 @@ do_admin() {
   if [ -z "$1" ]; then
     echo "Warnung: SMS_ADMIN-Nummer gelöscht"
   fi
+}
+
+# --- -----------------------------------------------------------------------
+
+do_fnr() {
+  if [ -z "$1" ]; then
+    echo "Fehler: Nummer/Text fehlt"
+    return
+  fi
+  sed -i -e "/FNR/s/FNR=\".*\"/FNR=\"$1\"/" /boot/fuchsfalle.cfg
 }
 
 # --- -----------------------------------------------------------------------
