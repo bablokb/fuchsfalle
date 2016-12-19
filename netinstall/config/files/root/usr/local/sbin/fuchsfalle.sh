@@ -40,16 +40,14 @@ read_config() {
     source "$grinc"
   else
     DEBUG=1 msg "Datei $grinc fehlt!"
-    schreibe_gpio22 0
-    exit 3
+    abbruch
   fi
   # Einlesen Konfiguration
   if [ -f "/boot/fuchsfalle.cfg" ]; then
     source "/boot/fuchsfalle.cfg"
   else
     DEBUG=1 msg "Konfiguration /boot/fuchsfalle.cfg fehlt!"
-    schreibe_gpio22 0
-    exit 3
+    abbruch
   fi
 
   # Modem-Name aus /etc/gammurc extrahieren
@@ -95,9 +93,7 @@ init_modem() {
   # Abbruch, falls Modem immer noch nicht verfügbar
   if [ ! -c "$MODEM" ]; then
     msg "Modem-Device $MODEM nicht verfügbar - Abbruch!"
-    schreibe_gpio22 0
-    DEBUG=1 msg "__________ Programmende $pgm_name (mit Fehler) _____________"
-    exit 3
+    abbruch
   fi
 
   # Falls PIN leer, wird sie auch nicht gesetzt
@@ -130,9 +126,7 @@ init_modem() {
   done
 
   # hier kommen wir nur im Fehlerfall hin (Abbruch oder zu viele Versuche)
-  schreibe_gpio22 0
-  DEBUG=1 msg "__________ Programmende $pgm_name (mit Fehler) _____________"
-  exit 3
+  abbruch
 }
 
 # --- Auslesen der GPIOs   --------------------------------------------------
@@ -204,9 +198,7 @@ sende_sms() {
 
   # hier kommen wir nur im Fehlerfall hin -> Abbruch
   msg "SMS-Versand fehlgeschlagen"
-  schreibe_gpio22 0
-  DEBUG=1 msg "__________ Programmende $pgm_name (mit Fehler) _____________"
-  exit 3
+  abbruch
 }
 
 # --- GPIO 22 setzen (erstes Argument ist 0 oder 1)   ----------------------
@@ -223,6 +215,14 @@ schreibe_gpio22() {
   echo "$1" > /sys/class/gpio/gpio22/value
 }
 
+# --- Abbruch mit Fehler   -------------------------------------------------
+
+abbruch() {
+  schreibe_gpio22 0
+  DEBUG=1 msg "__________ Programmende $pgm_name (mit Fehler) _____________"
+  exit 3
+}
+
 # --- Hauptprogramm   ------------------------------------------------------
 
 DEBUG=1 msg "__________ Programmstart $pgm_name ___________________________"
@@ -236,8 +236,7 @@ dump_config
 if [ "$ETEST" = "NOSMS" ]; then
   # SMS-Versand schlägt fehl
   msg "Fehlersimulation: SMS-Versand fehlgeschlagen"
-  schreibe_gpio22 0
-  exit 3
+  abbruch
 elif [ "$ETEST" = "LOOP" ]; then
   # fuchsfalle.sh hängt sich auf (rc.local sollte den Prozess dann beenden)
   msg "Fehlersimulation: $pgm_name hängt sich auf"
