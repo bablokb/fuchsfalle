@@ -32,7 +32,7 @@ nosend  - Senden von SMS deaktivieren
 halt    - Herunterfahren aktivieren
 nohalt  - Herunterfahren deaktivieren
 
-sharf   - Scharfschalten des Pi (entspricht "aktiv send halt")
+scharf  - Scharfschalten des Pi (entspricht "aktiv send halt")
 EOF
 
 exit 0
