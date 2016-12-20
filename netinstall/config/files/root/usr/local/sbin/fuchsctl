@@ -109,25 +109,33 @@ do_log() {
 # --- -----------------------------------------------------------------------
 
 do_nosend() {
-  touch /boot/nosend
+  if [ -f /boot/nosendno ]; then
+    mv -f /boot/nosendno /boot/nosend
+  else
+    touch /boot/nosend
+  fi
 }
 
 # --- -----------------------------------------------------------------------
 
 do_send() {
-  rm -f /boot/nosend
+  mv -f /boot/nosend /boot/nosendno
 }
 
 # --- -----------------------------------------------------------------------
 
 do_nohalt() {
-  touch /boot/nohalt
+  if [ -f /boot/nohaltno ]; then
+    mv -f /boot/nohaltno /boot/nohalt
+  else
+    touch /boot/nohalt
+  fi
 }
 
 # --- -----------------------------------------------------------------------
 
 do_halt() {
-  rm -f /boot/nohalt
+  mv -f /boot/nohalt /boot/nohaltno
 }
 
 # --- -----------------------------------------------------------------------
