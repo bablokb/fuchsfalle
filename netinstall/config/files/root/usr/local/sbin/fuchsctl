@@ -16,23 +16,26 @@ Mögliche Parameter:
 
 help    - diese Hilfe
 
-aktiv   - Konfiguration AKTIV=1 setzen
-inaktiv - Konfiguration AKTIV=0 setzen
-pin     - Setzen der Pin
-sms     - Setzen der SMS-Nummer (SMS_NR)
-admin   - Setzen der Admin-Nummern (SMS_ADMIN)
-fnr     - Setzen der Nummer/des Texts der Fuchsfalle
+aktiv       - Konfiguration AKTIV=1 setzen
+inaktiv     - Konfiguration AKTIV=0 setzen
+pin         - Setzen der Pin
+sms         - Setzen der SMS-Nummer (SMS_NR)
+admin       - Setzen der Admin-Nummern (SMS_ADMIN)
+fnr         - Setzen der Nummer/des Texts der Fuchsfalle
 
-syslog  - Anzeige Systemlog-Meldungen
-log     - Anzeige /var/log/fuchsfalle.log
-rclog   - Anzeige /var/log/rc.log
+syslog      - Anzeige Systemlog-Meldungen
+log         - Anzeige /var/log/fuchsfalle.log
+rclog       - Anzeige /var/log/rc.log
 
-send    - Senden von SMS aktivieren
-nosend  - Senden von SMS deaktivieren
-halt    - Herunterfahren aktivieren
-nohalt  - Herunterfahren deaktivieren
+send        - Senden von SMS aktivieren
+nosend      - Senden von SMS deaktivieren
+halt        - Herunterfahren aktivieren
+nohalt      - Herunterfahren deaktivieren
 
-scharf  - Scharfschalten des Pi (entspricht "aktiv send halt")
+powersave   - Alle konfigurierten Mechanismen aktivieren
+nopowersave - Alle konfigurierten Mechanismen deaktivieren
+
+scharf      - Scharfschalten des Pi (entspricht "aktiv send halt powersave")
 EOF
 
 exit 0
@@ -139,11 +142,22 @@ do_halt() {
 }
 
 # --- -----------------------------------------------------------------------
+do_powersave() {
+  systemctl start fuchspower.service
+}
+
+# --- -----------------------------------------------------------------------
+do_nopowersave() {
+  systemctl stop fuchspower.service
+}
+
+# --- -----------------------------------------------------------------------
 
 do_scharf() {
   do_aktiv
   do_send
   do_halt
+  do_powersave
 }
 
 # --- Hauptprogramm   -------------------------------------------------------
