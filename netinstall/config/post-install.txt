@@ -15,3 +15,7 @@
 echo "Setze max_usb_current=1 in /boot/config/txt ..."
 echo -e "\nmax_usb_current=1" >> /rootfs/boot/config.txt
 
+# Systemservice aktivieren   ------------------------------------------------
+
+echo "Aktiviere fuchspower.service ..."
+systemctl enable fuchspower.service
