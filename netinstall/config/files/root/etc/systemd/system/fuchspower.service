@@ -1,0 +1,26 @@
+# --------------------------------------------------------------------------
+# Systemd service Definition für fuchspower.service.
+#
+# Der Service startet das minpower.sh Skript aus /usr/local/sbin.
+#
+# Author: Bernhard Bablok
+# License: GPL3
+#
+# Website: https://github.com/bablokb/fuchsfalle
+#
+# --------------------------------------------------------------------------
+
+[Unit]
+Description=Start des fuchspower.sh Skripts aus /usr/local/sbin
+DefaultDependencies=no
+After=sysinit.target local-fs.target
+Before=basic.target
+ 
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/fuchspower.sh an
+ExecStop=/usr/local/sbin/fuchspower.sh aus
+
+[Install]
+WantedBy=basic.target
