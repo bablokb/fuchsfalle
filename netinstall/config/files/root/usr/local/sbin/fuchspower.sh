@@ -77,7 +77,7 @@ config_system() {
     [ "$PS_NOSCREEN" -eq 1 ] && /opt/vc/bin/tvservice -o
                                # vcgencmd display_power 0
     [ "$PS_NOLED"    -eq 1 ] && echo "none" > /sys/class/leds/led0/trigger
-    [ "$PS_NONET"    -eq 1 ] && systemd stop networking.service
+    [ "$PS_NONET"    -eq 1 ] && systemctl stop networking.service
     [ "$PS_NOWLAN"   -eq 1 ] && rfkill block wifi
     [ "$PS_NOBT"     -eq 1 ] && rfkill block bluetooth
   elif [ "$(systemctl is-system-running)" != "stopping" ]; then
@@ -85,7 +85,7 @@ config_system() {
     [ "$PS_NOSCREEN" -eq 1 ] && /opt/vc/bin/tvservice -p
                                  # vcgencmd display_power 1
     [ "$PS_NOLED"    -eq 1 ] && echo "mmc0" > /sys/class/leds/led0/trigger
-    [ "$PS_NONET"    -eq 1 ] && systemd start networking.service
+    [ "$PS_NONET"    -eq 1 ] && systemctl start networking.service
     [ "$PS_NOWLAN"   -eq 1 ] && rfkill unblock wifi
     [ "$PS_NOBT"     -eq 1 ] && rfkill unblock bluetooth
   else
