@@ -32,6 +32,7 @@ nosend      - Senden von SMS deaktivieren
 halt        - Herunterfahren aktivieren
 nohalt      - Herunterfahren deaktivieren
 
+powerset    - Variable für Powersave setzen (Argumente: Variable Wert)
 powersave   - Alle konfigurierten Mechanismen aktivieren
 nopowersave - Alle konfigurierten Mechanismen deaktivieren
 
@@ -58,7 +59,7 @@ do_inaktiv() {
 do_pin() {
   sed -i -e "/PIN/s/PIN=\".*\"/PIN=\"$1\"/" /boot/fuchsfalle.cfg
   if [ -z "$1" ]; then
-    echo "Warnung: Pinnummer gelöscht"
+    echo "Warnung: Pinnummer gelöscht" >&2
   fi
 }
 
@@ -66,7 +67,7 @@ do_pin() {
 
 do_sms() {
   if [ -z "$1" ]; then
-    echo "error: SMS-Nummer fehlt"
+    echo "Fehler: SMS-Nummer fehlt" >&2
   else
     sed -i -e "/SMS_NR/s/SMS_NR=\".*\"/SMS_NR=\"$1\"/" /boot/fuchsfalle.cfg
   fi
@@ -77,7 +78,7 @@ do_sms() {
 do_admin() {
   sed -i -e "/SMS_ADMIN/s/SMS_ADMIN=\".*\"/SMS_ADMIN=\"$1\"/" /boot/fuchsfalle.cfg
   if [ -z "$1" ]; then
-    echo "Warnung: SMS_ADMIN-Nummer gelöscht"
+    echo "Warnung: SMS_ADMIN-Nummer gelöscht" >&2
   fi
 }
 
@@ -85,7 +86,7 @@ do_admin() {
 
 do_fnr() {
   if [ -z "$1" ]; then
-    echo "Fehler: Nummer/Text fehlt"
+    echo "Fehler: Nummer/Text fehlt" >&2
     return
   fi
   sed -i -e "/FNR/s/FNR=\".*\"/FNR=\"$1\"/" /boot/fuchsfalle.cfg
@@ -139,6 +140,18 @@ do_nohalt() {
 
 do_halt() {
   mv -f /boot/nohalt /boot/nohaltno
+}
+
+# --- -----------------------------------------------------------------------
+do_powerset() {
+  local var="$1" wert="$2"
+  if [ -z "$var" ]; then
+    echo "Fehler: Argumente 'Variable Wert' fehlen" >&2
+  elif [ -z "$wert" ]; then
+    echo "Fehler: Argument 'Wert' fehlt" >&2
+  else
+    sed -i -e "/$var/s/$var=\".*\"/$var=\"$wert\"/" /boot/fuchsfalle.cfg
+  fi
 }
 
 # --- -----------------------------------------------------------------------
