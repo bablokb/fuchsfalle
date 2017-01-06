@@ -3,6 +3,7 @@ root:root 755 /boot/nosend
 root:root 755 /boot/fuchsfalle.cfg
 root:root 755 /etc/rc.local
 root:root 644 /etc/gammurc
+root:root 644 /etc/udev/rules.d/85-hwclock.rules
 root:root 644 /etc/systemd/system/fuchspower.service
 root:root 755 /usr/local/sbin/fuchsfalle.sh
 root:root 644 /usr/local/sbin/gammu_retcode.inc
