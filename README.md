@@ -51,38 +51,8 @@ wie unten beschrieben durchführen.
 Installation per Netinstall
 ---------------------------
 
-Als Vorraussetzung sind die beiden Pakete `bzip2` und `kpartx`
-notwendig, die einmalig wie üblich mit
-
-    apt-get update
-    apt-get -y install bzip2 kpartx
-
-installiert werden müssen.
-
-Die Installation per Netinstall läuft in mehreren Schritten ab. Zuerst
-wird das Repository geclont:
-
-    sudo su -
-    git clone https://github.com/bablokb/fuchsfalle.git
-
-Anschließend wird ein SD-Karten Image erzeugt mit
-
-    cd fuchsfalle
-    tools/fufa-image
-
-Das Skript lädt ein Netinstaller-Image herunter und kopiert die
-projektspezifischen Dateien auf das Image. Nach wenigen Minuten
-liegt im fuchsfalle-Verzeichnis eine Datei `fuchsfalle.img`.
-
-Diese Datei kopiert man wie ein normales Raspbian-Image auf eine
-SD-Karte. Anschließend kommt die Karte in den Pi. Dieser sollte
-per Ethernet am Router hängen. Sobald der Pi Strom hat, bootet er
-und die Installation läuft los.
-
-Die Installationsdauer ist abhängig von der Geschwindigkeit der
-SD-Karte (15-90 Minuten). Nach der Installation kann man sich als
-root mit dem in der Datei `netinstall/config/installer-cfg.txt`
-festgelegtem Passwort anmelden.
+Details zur Installation per Netinstall stehen im Dokument
+[doc/Netinstall.md] (./doc/Netinstall.md "Installation mit Netinstall").
 
 
 Konfiguration
@@ -97,6 +67,24 @@ Ablauf und Timing
 
 Das Dokument [doc/Ablauf.md](./doc/Ablauf.md "Ablauf und Timing") beschreibt
 den Ablauf auf Pi-Seite sowie die eingestellten Zeitwerte.
+
+
+Real-Time-Clock
+---------------
+
+Da das System keinen Internetanschluss hat und die einfachen GSM-Modems
+in den UMTS-Sticks die Netzwerkzeit nicht abfragen können, hat das System
+eine RTC auf Basis des Chips DS3231. Das Netinstall-Image konfiguriert
+die RTC bei der Installation automatisch, die manuelle Einrichtung
+beschreibt das Dokument [doc/RTC.md] (./doc/RTC.md "Real-Time-Clock").
+
+
+Aktivierung von Stromsparmechanismen
+------------------------------------
+
+Diverse Maßnahmen reduzieren den Stromverbrauch des Pi. Details dazu sind
+im Dokument [doc/Stromsparen.md] (./doc/Stromsparen.md "Stromsparen")
+beschrieben.
 
 
 Tests mit der Testplatine
