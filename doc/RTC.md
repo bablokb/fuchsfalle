@@ -27,7 +27,8 @@ Ein Test mit
 
     sudo i2cdetect -y 1
 
-aus dem Paket "i2c-tools" sollte auf Position 68 ein "UU" ausgeben.
+aus dem Paket "i2c-tools" (nur für Diagnosezwecke notwendig) sollte auf
+Position 68 ein "UU" ausgeben.
 
 Die Datei `/etc/udev/rules.d/85-hwclock.rules` sorgt beim Systemstart
 dafür, dass die Systemzeit mit der Zeit der RTC aktualisiert wird.
@@ -36,13 +37,26 @@ dafür, dass die Systemzeit mit der Zeit der RTC aktualisiert wird.
 Stellen der Uhr
 ---------------
 
+Das Skript `/usr/local/sbin/fuchsrtc` erledigt das erstmalige Stellen
+der Uhr automatisch (noch nicht implementiert). Nach dem allerersten
+Boot muss es aufgerufen werden und setzt eine funktionsfähige
+Internetverbindung voraus. Die folgenden Schritte beschreiben den
+Ablauf, den das Skript automatisiert.
+
 Zuerst muss sichergestellt sein, dass der Pi die korrekte Zeit hat. Normalerweise
 ist dies nach jedem Boot der Fall, wenn der Pi am Netzwerk hängt. Das lässt
 sich mit dem Kommando
 
     date
 
-kontrollieren (Ausgabe der aktuellen Systemzeit). Das Kommando
+kontrollieren (Ausgabe der aktuellen Systemzeit). Stimmt die Zeit nicht,
+konnte der NTP-Daemon die Zeit nicht synchronisieren. Hier muss man entweder
+etwas warten oder man installiert das Paket `ntpdate` nach und führt den
+Befehl
+
+    sudo ntpdate 2.debian.pool.ntp.org
+
+aus. Das Kommando
 
     sudo hwclock -w -u
 
