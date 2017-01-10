@@ -38,7 +38,7 @@ Stellen der Uhr
 ---------------
 
 Das Skript `/usr/local/sbin/fuchsrtc` erledigt das erstmalige Stellen
-der Uhr automatisch (noch nicht implementiert). Nach dem allerersten
+der Uhr automatisch. Nach dem allerersten
 Boot muss es aufgerufen werden und setzt eine funktionsfähige
 Internetverbindung voraus. Die folgenden Schritte beschreiben den
 Ablauf, den das Skript automatisiert.
