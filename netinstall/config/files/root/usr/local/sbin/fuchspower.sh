@@ -57,6 +57,30 @@ abbruch() {
   exit 3
 }
 
+# --- LEDs an/ausschalten   ------------------------------------------------
+
+led_set() {
+  local value
+  if [ "$1" = "aus" ]; then
+    # Aktivitäts-LED abschalten
+    value=$(<//sys/class/leds/led0/brightness)
+    let value=1-value                                 # Pi-Zero ist invertiert
+    echo "$value" > /sys/class/leds/led0/brightness   # nur wegen Pi-Zero
+    echo "none"   > /sys/class/leds/led0/trigger
+    # Rote LED abschalten klappt nur auf manchen Systemen
+    echo "none"   > /sys/class/leds/led1/trigger
+  else
+    # Aktivitäts-LED anschalten
+    value=$(<//sys/class/leds/led0/brightness)
+    let value=1-value                                 # Pi-Zero ist invertiert
+    echo "$value" > /sys/class/leds/led0/brightness   # nur wegen Pi-Zero
+    echo "mmc0"   > /sys/class/leds/led0/trigger
+    # Rote LED anschalten klappt nur auf manchen Systemen
+    echo "input"   > /sys/class/leds/led1/trigger
+  fi
+}
+
+
 # --- System konfigurieren   -----------------------------------------------
 
 config_system() {
@@ -76,7 +100,7 @@ config_system() {
     msg "Aktiviere Stromsparmechanismen"
     [ "$PS_NOSCREEN" -eq 1 ] && /opt/vc/bin/tvservice -o
                                # vcgencmd display_power 0
-    [ "$PS_NOLED"    -eq 1 ] && echo "none" > /sys/class/leds/led0/trigger
+    [ "$PS_NOLED"    -eq 1 ] && led_set aus
     [ "$PS_NONET"    -eq 1 ] && systemctl stop networking.service
     [ "$PS_NOWLAN"   -eq 1 ] && rfkill block wifi
     [ "$PS_NOBT"     -eq 1 ] && rfkill block bluetooth
@@ -84,7 +108,7 @@ config_system() {
     msg "Deaktiviere Stromsparmechanismen"
     [ "$PS_NOSCREEN" -eq 1 ] && /opt/vc/bin/tvservice -p
                                  # vcgencmd display_power 1
-    [ "$PS_NOLED"    -eq 1 ] && echo "mmc0" > /sys/class/leds/led0/trigger
+    [ "$PS_NOLED"    -eq 1 ] && led_set an
     [ "$PS_NONET"    -eq 1 ] && systemctl start networking.service
     [ "$PS_NOWLAN"   -eq 1 ] && rfkill unblock wifi
     [ "$PS_NOBT"     -eq 1 ] && rfkill unblock bluetooth
