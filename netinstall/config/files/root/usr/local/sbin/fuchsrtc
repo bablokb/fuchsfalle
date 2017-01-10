@@ -1,0 +1,29 @@
+#!/bin/bash
+# ---------------------------------------------------------------------------
+#
+# Hilfsprogramm für das Initialisieren der RTC.
+#
+# Autor: Bernhard Bablok
+# Lizenz: GPL3
+#
+# Website: https://github.com/bablokb/fuchsfalle
+#
+# ---------------------------------------------------------------------------
+
+# --- Aktuelle Zeit aus dem Internet holen und setzen   ---------------------
+
+ntpdate 2.debian.pool.ntp.org
+if [ $? -ne 0 ]; then
+  echo -e "Fehler: konnte aktuelle Zeit nicht aus dem Internet aktualisieren!"
+  exit 3
+fi
+
+# --- Systemzeit in die Hardware-Clock kopieren   ---------------------------
+
+hwclock -w -u
+
+# --- Kontrollausgaben   ----------------------------------------------------
+
+sysZeit=$(date)
+rtcZeit=$(hwclock -r)
+echo -e "Aktuelle Zeiten:\n\tSystem-Zeit: $sysZeit\n\tRTC-Zeit:    $rtcZeit"
