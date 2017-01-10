@@ -30,14 +30,16 @@ Jessie-Lite wie gewohnt installieren. Ein normales Jessie geht auch,
 aber der große Softwareumfang ist nicht notwendig. Folgende Pakete
 müssen nachinstalliert werden:
 
-  - gammu
-  - usb-modeswitch
-  - usb-modeswitch-data
-  - git
+  - gammu, usb-modeswitch, usb-modeswitch-data, wiringpi
+  - ntpdate, rfkill
+  - git, i2c-tools
 
-Letzteres Paket ist nicht für den Betrieb, sondern für die einfache
-Installation notwendig. Anschließend folgende Befehle auf dem Pi
-ausführen:
+Die ersten Pakete sind für die Kernfunktionalität notwendig. Verschiedene
+Utilities nutzen die zweiten Pakete. Die letzteren Pakete sind nicht für
+den Betrieb, sondern für die einfache Installation beziehungsweise für
+Diagnosezwecke notwendig.
+
+Nach der Installation sind folgende Befehle auf dem Pi auszuführen:
 
     sudo su -
     git clone https://github.com/bablokb/fuchsfalle.git
