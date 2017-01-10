@@ -12,10 +12,15 @@
 
 # Anpassen /boot/config.txt   -----------------------------------------------
 
-echo "Setze max_usb_current=1 in /boot/config/txt ..."
+echo "Setze 'max_usb_current=1' in /boot/config/txt ..."
 echo -e "\nmax_usb_current=1" >> /rootfs/boot/config.txt
 
 # Systemservice aktivieren   ------------------------------------------------
 
 echo "Aktiviere fuchspower.service ..."
 systemctl enable fuchspower.service
+
+# RTC konfigurieren   -------------------------------------------------------
+
+echo "Setze 'dtoverlay=i2c-rtc,ds3231' in /boot/config/txt ..."
+echo -e "\ndtoverlay=i2c-rtc,ds3231" >> /rootfs/boot/config.txt
