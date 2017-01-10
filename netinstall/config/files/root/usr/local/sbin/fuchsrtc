@@ -12,18 +12,27 @@
 
 # --- Aktuelle Zeit aus dem Internet holen und setzen   ---------------------
 
+echo -e "Info: Aktualisiere die Systemzeit ..." >&2
 ntpdate 2.debian.pool.ntp.org
 if [ $? -ne 0 ]; then
-  echo -e "Fehler: konnte aktuelle Zeit nicht aus dem Internet aktualisieren!"
+  echo -e "Fehler: konnte aktuelle Zeit nicht aus dem Internet aktualisieren!" >&2
   exit 3
 fi
 
 # --- Systemzeit in die Hardware-Clock kopieren   ---------------------------
 
+echo -e "Info: Setze die Hardwarezeit" >&2
 hwclock -w -u
 
 # --- Kontrollausgaben   ----------------------------------------------------
 
 sysZeit=$(date)
 rtcZeit=$(hwclock -r)
-echo -e "Aktuelle Zeiten:\n\tSystem-Zeit: $sysZeit\n\tRTC-Zeit:    $rtcZeit"
+echo -e "\nAktuelle Zeiten:\n\tSystem-Zeit: $sysZeit\n\tRTC-Zeit:    $rtcZeit"
+
+# --- Unnötige Services deaktivieren   --------------------------------------
+
+echo -e "Info: Deaktiviere ntp.service und fake-hwclock.service" >&2
+systemctl disable fake-hwclock.service
+systemctl stop ntp.service
+systemctl disable ntp.service
