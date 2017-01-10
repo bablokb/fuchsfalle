@@ -171,7 +171,7 @@ sende_sms() {
   fi
 
   # Wir nutzen den Meldungsnummer als Index in den Array
-  text="${meldung[$nr]}"
+  text="$(date '+%m%Y%d %H:%M:%S') ${meldung[$nr]}"
   msg "Versende Meldung an $sms_nr: $text"
 
   # Prüfen auf /boot/nosend (Testmodus)
