@@ -10,6 +10,13 @@
 #
 # ---------------------------------------------------------------------------
 
+# --- Unnötige Services deaktivieren   --------------------------------------
+
+echo -e "Info: Deaktiviere ntp.service und fake-hwclock.service" >&2
+systemctl disable fake-hwclock.service
+systemctl stop ntp.service
+systemctl disable ntp.service
+
 # --- Aktuelle Zeit aus dem Internet holen und setzen   ---------------------
 
 echo -e "Info: Aktualisiere die Systemzeit ..." >&2
@@ -29,10 +36,3 @@ hwclock -w -u
 sysZeit=$(date)
 rtcZeit=$(hwclock -r)
 echo -e "\nAktuelle Zeiten:\n\tSystem-Zeit: $sysZeit\n\tRTC-Zeit:    $rtcZeit"
-
-# --- Unnötige Services deaktivieren   --------------------------------------
-
-echo -e "Info: Deaktiviere ntp.service und fake-hwclock.service" >&2
-systemctl disable fake-hwclock.service
-systemctl stop ntp.service
-systemctl disable ntp.service
