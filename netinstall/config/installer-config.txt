@@ -19,6 +19,8 @@ locales="de_DE.UTF-8"
 system_default_locale="de_DE.UTF-8"
 keyboard_layout="de"
 
+i2c_enable=1
+
 #ip_addr="192.168.100.10"
 #ip_netmask="255.255.255.0"
 #ip_broadcast="192.168.100.255"
