@@ -95,3 +95,10 @@ Tests mit der Testplatine
 Die Varianten für die Tests mit der Testplatine sind im Dokument
 [doc/Tests.md](./doc/Tests.md "Tests") abgelegt.
 
+
+Test (produktiver Ablauf)
+-------------------------
+
+Das Dokument [doc/Testplan.md](./doc/Testplan.md "Testplan") beschreibt
+den Ablauf.
+
