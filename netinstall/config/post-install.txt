@@ -18,7 +18,7 @@ echo -e "\nmax_usb_current=1" >> /rootfs/boot/config.txt
 # Systemservice aktivieren   ------------------------------------------------
 
 echo "Aktiviere fuchspower.service ..."
-systemctl enable fuchspower.service
+chroot /rootfs /bin/systemctl enable fuchspower.service
 
 # RTC konfigurieren   -------------------------------------------------------
 
