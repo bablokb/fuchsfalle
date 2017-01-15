@@ -23,7 +23,7 @@ Zusammenbau
 An dieser Stelle erfolgt der Zusammenbau: Raspi auf Trägerplatine mit Akku,
 PIC-Board auf den Raspi. Für die Konfiguration der RTC kommt der Pi
 ans Netzwerk, eventuell auch Tastatur und Bildschirm anschließen. Jetzt
-den Strom per Jumper anschalten (am PIC vorbei).
+den Strom anschalten.
 
 Nach dem Boot einloggen und mit
 
@@ -40,8 +40,7 @@ Die ersten beiden Befehle sind optional und davon abhängig, ob das
 System später noch im Zugriff bleiben soll (kann aber jederzeit direkt
 in der `/boot/fuchsfalle.cfg` zurückgesetzt werden).
 
-Anschließend den Jumper durch die Verbindung mit dem PIC ersetzen. Ab
-jetzt läuft die Zeit.
+Auf dem PIC den Reset-Knopf drücken. Ab jetzt läuft die Zeit.
 
 
 Test: Falle offen, keine Unterspannung
