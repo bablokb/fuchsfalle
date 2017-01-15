@@ -56,7 +56,7 @@ Test: Falle zu, keine Unterspannung
 
 Testklappe entsprechend positionieren. Warten...
 
-** Erwartetes Ergebnis: der Pi fährt nach ca. 5 Minuten hoch und versendet
+**Erwartetes Ergebnis: der Pi fährt nach ca. 5 Minuten hoch und versendet
 eine entsprechende SMS.**
 
 Weitere 10 Minuten warten.
@@ -69,7 +69,7 @@ Test: Falle offen, Unterspannung
 
 Testklappe neu positionieren. Reset drücken. Strom auf Unterspannung setzen.
 
-** Erwartetes Ergebnis: der Pi fährt nach ca. 5 Minuten hoch und versendet
+**Erwartetes Ergebnis: der Pi fährt nach ca. 5 Minuten hoch und versendet
 eine entsprechende SMS.**
 
 Weitere 10 Minuten warten.
@@ -82,7 +82,7 @@ Test: Falle zu, Unterspannung
 
 Testklappe neu positionieren. Reset drücken.
 
-** Erwartetes Ergebnis: der Pi fährt nach ca. 5 Minuten hoch und versendet
+**Erwartetes Ergebnis: der Pi fährt nach ca. 5 Minuten hoch und versendet
 eine entsprechende SMS.**
 
 Weitere 10 Minuten warten.
