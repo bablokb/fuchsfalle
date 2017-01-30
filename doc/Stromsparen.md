@@ -6,11 +6,11 @@ Stromsparmechanismen an oder aus. Gesteuert wird das Skript über
 die Datei `/boot/fuchsfalle.cfg`. Dort gibt es eine Reihe von
 Variablen, die den Wert Null oder Eins haben können:
 
-    PS_NOSCREEN="0"        # HDMI abschalten
-    PS_NOLED="0"           # LEDs abschalten
-    PS_NONET="0"           # Netzwerk abschalten
-    PS_NOWLAN="0"          # WLAN abschalten
-    PS_NOBT="0"            # Bluetooth abschalten
+    PS_NOSCREEN="0"        # 1: HDMI abschalten
+    PS_NOLED="0"           # 1: LEDs abschalten
+    PS_NONET="0"           # 1: Netzwerk abschalten
+    PS_NOWLAN="0"          # 1: WLAN abschalten
+    PS_NOBT="0"            # 1: Bluetooth abschalten
 
 Das Skript erwartet zusätzlich einen Parameter mit Wert `an` oder `aus`.
 
