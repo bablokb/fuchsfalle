@@ -9,6 +9,10 @@ der Chip ein Device `/dev/rtc` für die Real-Time-Clock bereit.
 Anpassung der Konfiguration
 ---------------------------
 
+Die hier beschriebenen Anpasssungen gelten allgemein für Raspbian-Jessie.
+Wird das System per Netinstall installiert, dann entfallen diese manuellen
+Anpassungen.
+
 In der `/boot/config.txt` muss die Zeile
 
     dtparam=i2c_arm=on
@@ -30,8 +34,11 @@ Ein Test mit
 aus dem Paket "i2c-tools" (nur für Diagnosezwecke notwendig) sollte auf
 Position 68 ein "UU" ausgeben.
 
-Die Datei `/etc/udev/rules.d/85-hwclock.rules` sorgt beim Systemstart
-dafür, dass die Systemzeit mit der Zeit der RTC aktualisiert wird.
+Die (neu zu erstellende) Datei `/etc/udev/rules.d/85-hwclock.rules`
+sorgt beim Systemstart dafür, dass die Systemzeit mit der Zeit der
+RTC aktualisiert wird:
+
+    KERNEL=="rtc0", RUN+="/sbin/hwclock -s"
 
 
 Stellen der Uhr
