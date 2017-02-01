@@ -36,8 +36,8 @@ Nach dem Boot einloggen und mit
 
 die Uhr stellen. Anschließend den Pi scharf schalten:
 
-    fuchsctl powerset NO_SCREEN 1
-    fuchsctl powerset NO_NET    1
+    fuchsctl powerset PS_NOSCREEN 1
+    fuchsctl powerset PS_NONET    1
     fuchsctl scharf
     halt -p & exit
 
@@ -46,7 +46,8 @@ System später noch im Zugriff bleiben soll (kann aber jederzeit direkt
 in der `/boot/fuchsfalle.cfg` zurückgesetzt werden).
 
 Nach dem Herunterfahren des Pi kommt das Verbindungskabel vom PIC
-nach dem entfernen des Jumpers wieder in die Bu2.
+nach dem entfernen des Jumpers wieder in die Bu2. Außerdem sollte jetzt
+der UMTS-Stick in den Pi eingesteckt werden.
 
 Auf dem PIC den Reset-Knopf drücken. Ab jetzt läuft die Zeit.
 
@@ -54,7 +55,7 @@ Auf dem PIC den Reset-Knopf drücken. Ab jetzt läuft die Zeit.
 entfernt werden und die Akkusimulation per SNT und Stepup-Konverter mit
 LED-Anzeige der Spannung an Bu1 der Platine PIC-Pi-3 angeschlossen
 werden. Der Stepup-Konverter mit LED-Anzeige ist auf ca. 3,8V (zwischen
-3,6 und 4,2 V) einzustellen.*
+3,6 und 4,2 V, d.h. keine Unterspannung) einzustellen.*
 
 
 Test: Falle offen, keine Unterspannung
@@ -83,7 +84,7 @@ Test: Falle offen, Unterspannung
 
 Testklappe neu positionieren (S1 offen). Reset drücken.
 Strom auf Unterspannung setzen, indem der Stepup-Konverter
-mit LED auf ca. 3,3V eingestellt wird.
+mit LED auf ca. 3,2V eingestellt wird.
 
 **Erwartetes Ergebnis: der Pi fährt nach ca. 5 Minuten hoch und versendet
 eine entsprechende SMS.**
