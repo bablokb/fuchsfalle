@@ -11,7 +11,7 @@ Anpassung der Konfiguration
 
 Die hier beschriebenen Anpasssungen gelten allgemein für Raspbian-Jessie.
 Wird das System per Netinstall installiert, dann entfallen diese manuellen
-Anpassungen.
+Anpassungen (die Uhr muss aber trotzdem wie unten beschrieben gestellt werden).
 
 In der `/boot/config.txt` muss die Zeile
 

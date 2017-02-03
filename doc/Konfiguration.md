@@ -1,6 +1,20 @@
 Konfiguration
 =============
 
+Vorarbeiten
+-----------
+
+Zuerst sind einmalig die internen Pullups der GPIOs 17 und 27 zu setzen:
+
+    sudo fuchsctl pullup
+
+Die Einstellung der Uhrzeit erfolgt gemäß dem Dokument
+[./RTC.md] (./RTC.md "Real-Time-Clock").
+
+
+Anpassung der Konfigurationsdatei
+---------------------------------
+
 Zwei Dateien müssen angepasst werden. Einmal die Datei `/etc/gammurc`.
 Hier muss das richtige Modem-Device eingetragen sein.
 
@@ -23,7 +37,7 @@ senden.
 
 Um besser testen zu können, gibt es die beiden Dateien
 
-  - `/bootnosend`
+  - `/boot/nosend`
   - `/boot/nohalt`
 
 Die Existenz der ersten Datei steuert den SMS-Versand. Solange es die
