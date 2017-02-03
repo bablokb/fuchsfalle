@@ -139,9 +139,7 @@ lese_gpios() {
  
   # Pins verfügbar machen für das Lesen
   gpio -g mode 17 in
-  gpio -g mode 17 up
   gpio -g mode 27 in
-  gpio -g mode 27 up
 
   # Pins auslesen
   gpio17=$(gpio -g read 17)
