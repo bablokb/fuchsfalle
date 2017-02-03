@@ -16,6 +16,8 @@ Mögliche Parameter:
 
 help    - diese Hilfe
 
+pullup      - Konfiguriert interne Pullups
+
 aktiv       - Konfiguration AKTIV=1 setzen
 inaktiv     - Konfiguration AKTIV=0 setzen
 pin         - Setzen der Pin
@@ -40,6 +42,14 @@ scharf      - Scharfschalten des Pi (entspricht "aktiv send halt powersave")
 EOF
 
 exit 0
+}
+
+# --- -----------------------------------------------------------------------
+
+do_pullup() {
+  gpio -g mode 17 up
+  gpio -g mode 27 up
+  touch /etc/gpio_17_27_up
 }
 
 # --- -----------------------------------------------------------------------
