@@ -38,7 +38,7 @@ powerset    - Variable für Powersave setzen (Argumente: Variable Wert)
 powersave   - Alle konfigurierten Mechanismen aktivieren
 nopowersave - Alle konfigurierten Mechanismen deaktivieren
 
-scharf      - Scharfschalten des Pi (entspricht "aktiv send halt powersave")
+scharf      - Scharfschalten des Pi (entspricht "aktiv send halt powersave pullup")
 EOF
 
 exit 0
@@ -177,6 +177,7 @@ do_nopowersave() {
 # --- -----------------------------------------------------------------------
 
 do_scharf() {
+  do_pullup
   do_aktiv
   do_send
   do_halt
