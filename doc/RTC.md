@@ -82,6 +82,7 @@ verstellt wird, müssen noch zwei Services abgeschaltet werden:
 
     sudo systemctl disable fake-hwclock.service
     sudo systemctl disable ntp.service
+    sudo chmod -x /etc/network/ifup.d/ntpdate
 
 Der erste Service schreibt die letzte Systemzeit in eine Datei und setzt
 die Systemzeit beim nächsten Boot wieder auf denselben Wert, der zweite
