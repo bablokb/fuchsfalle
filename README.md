@@ -54,14 +54,13 @@ Installation per Netinstall
 ---------------------------
 
 Details zur Installation per Netinstall stehen im Dokument
-[doc/Netinstall.md] (./doc/Netinstall.md "Installation mit Netinstall").
+[doc/Netinstall.md](./doc/Netinstall.md "Installation mit Netinstall").
 
 
 Konfiguration
 -------------
 
-Details zur Konfiguration stehen im Dokument [doc/Konfiguration.md]
-(./doc/Konfiguration.md "Konfiguration").
+Details zur Konfiguration stehen im Dokument [doc/Konfiguration.md](./doc/Konfiguration.md "Konfiguration").
 
 
 Ablauf und Timing
@@ -78,14 +77,14 @@ Da das System keinen Internetanschluss hat und die einfachen GSM-Modems
 in den UMTS-Sticks die Netzwerkzeit nicht abfragen können, hat das System
 eine RTC auf Basis des Chips DS3231. Das Netinstall-Image konfiguriert
 die RTC bei der Installation automatisch, die manuelle Einrichtung
-beschreibt das Dokument [doc/RTC.md] (./doc/RTC.md "Real-Time-Clock").
+beschreibt das Dokument [doc/RTC.md](./doc/RTC.md "Real-Time-Clock").
 
 
 Aktivierung von Stromsparmechanismen
 ------------------------------------
 
 Diverse Maßnahmen reduzieren den Stromverbrauch des Pi. Details dazu sind
-im Dokument [doc/Stromsparen.md] (./doc/Stromsparen.md "Stromsparen")
+im Dokument [doc/Stromsparen.md](./doc/Stromsparen.md "Stromsparen")
 beschrieben.
 
 
